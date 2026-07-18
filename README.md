@@ -19,7 +19,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/riyanshika7/stadiumOS"><strong>GitHub Repository</strong></a> |
+  <a href="https://github.com/riyanshika7/CHALLENGE4"><strong>GitHub Repository</strong></a> |
   <a href="https://stadiumos-demo.onrender.com"><strong>Live Demo Link</strong></a>
 </p>
 
@@ -312,8 +312,8 @@ Every endpoint has a **dual execution path**: GenAI (Gemini) when API key is con
 
 ```bash
 # 1. Clone
-git clone https://github.com/your-org/stadiumos.git
-cd stadiumos
+git clone https://github.com/riyanshika7/CHALLENGE4.git
+cd CHALLENGE4
 
 # 2. Backend setup
 cd backend

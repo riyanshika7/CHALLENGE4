@@ -5,6 +5,7 @@ import {
   HelpCircle, Volume2, Mic, MicOff, AlertTriangle, 
   Clock, Zap, CheckSquare, Sparkles, Send, MapPin
 } from 'lucide-react';
+import { API_BASE_URL } from '../constants';
 
 export default function MissionCommander() {
   const [situation, setSituation] = useState('');
@@ -86,9 +87,6 @@ export default function MissionCommander() {
     if (typingTimerRef.current) clearInterval(typingTimerRef.current);
 
     try {
-      const API_BASE_URL = window.location.origin.includes('5173') 
-        ? `${window.location.protocol}//${window.location.hostname}:8000` 
-        : '';
       const response = await fetch(`${API_BASE_URL}/api/mission-commander`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
