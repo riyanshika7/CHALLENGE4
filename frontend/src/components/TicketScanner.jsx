@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { Camera, UploadCloud } from 'lucide-react';
+import { Camera, UploadCloud, RefreshCw } from 'lucide-react';
 import { API_BASE_URL } from '../constants';
 import TicketScanResult from './TicketScanResult';
 

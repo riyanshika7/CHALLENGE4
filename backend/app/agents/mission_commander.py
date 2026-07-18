@@ -53,7 +53,7 @@ def handle_mission_command(situation: str) -> dict:
         try:
             client = genai.Client(api_key=GEMINI_API_KEY)
             response = client.models.generate_content(
-                model='gemini-3.1-pro',
+                model='gemini-1.5-flash',
                 contents=f"Generate an operational plan for: '{situation}'",
                 config=types.GenerateContentConfig(
                     system_instruction=SYSTEM_INSTRUCTION,

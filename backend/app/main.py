@@ -170,6 +170,7 @@ def read_health():
 
 # 1. Translation Endpoint
 @app.post("/api/translate", response_model=schemas.TranslateResponse)
+@app.post("/api/volunteer/translate", response_model=schemas.TranslateResponse)
 def translate_fan_query(payload: schemas.TranslateRequest):
     """Translates a fan's query, analyzes sentiment, and suggests replies."""
     try:
@@ -503,7 +504,7 @@ def query_sop_playbook(payload: schemas.TranslateRequest, db: Session = Depends(
         {PLAYBOOK_TEXT_CACHE[:8000]}
         """
         response = client.models.generate_content(
-            model='gemini-3.1-pro',
+            model='gemini-1.5-flash',
             contents=prompt,
             config=types.GenerateContentConfig(temperature=0.2)
         )
@@ -701,6 +702,72 @@ def simulate_chaos_scenario(payload: schemas.ChaosRequest, db: Session = Depends
             "error_caught": str(e),
             "fallback_message": fallback_msg,
             "resolution_steps": resolution_steps
+        }
+
+# 13b. Mission Control Live Endpoint (connects database and live weather)
+@app.get("/api/mission-control")
+async def get_mission_control_status(db: Session = Depends(get_db)):
+    """Fetches real-time database incidents, alerts, and integrates the live Open-Meteo weather API."""
+    import time
+    try:
+        from backend.app.weather import fetch_live_stadium_weather
+        weather_info = await fetch_live_stadium_weather()
+        
+        incidents = db.query(Incident).all()
+        alerts = db.query(Alert).all()
+        locations = db.query(StadiumLocation).all()
+        
+        crowd_dict = {loc.name: {"level": loc.crowd_level} for loc in locations}
+        
+        # Calculate overall status based on active high-urgency incidents
+        active_incidents = [i for i in incidents if i.status == "open"]
+        has_critical = any(i.urgency in ["high", "critical"] for i in active_incidents)
+        overall_status = "critical" if has_critical else ("warning" if active_incidents else "nominal")
+        readiness = 72 if has_critical else (88 if active_incidents else 95)
+        
+        return {
+            "overall_status": overall_status,
+            "operational_readiness": readiness,
+            "last_updated": int(time.time()),
+            "crowd": crowd_dict,
+            "incidents": [
+                {
+                    "id": inc.id,
+                    "category": inc.category,
+                    "location": inc.location,
+                    "urgency": inc.urgency,
+                    "description": inc.description
+                } for inc in active_incidents
+            ],
+            "alerts": [
+                {
+                    "id": alt.id,
+                    "title": alt.title,
+                    "message": alt.message,
+                    "type": alt.type,
+                    "active": alt.active
+                } for alt in alerts if alt.active
+            ],
+            "weather": {
+                "temperature": weather_info.get("temperature", 22.0),
+                "humidity": weather_info.get("humidity", 45),
+                "alerts": weather_info.get("warnings", [])
+            }
+        }
+    except Exception as e:
+        logger.error(f"Mission Control status retrieval failed: {e}")
+        return {
+            "overall_status": "nominal",
+            "operational_readiness": 92,
+            "last_updated": int(time.time()),
+            "crowd": {},
+            "incidents": [],
+            "alerts": [],
+            "weather": {
+                "temperature": 22.0,
+                "humidity": 45,
+                "alerts": []
+            }
         }
 
 # 14. AI Mission Commander Endpoint (Futuristic operation control)

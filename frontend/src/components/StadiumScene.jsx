@@ -303,18 +303,22 @@ export function StadiumScene({ scrollProgress, activeNode, onNodeClick, activeLa
       ))}
 
       {/* Drones */}
-      <mesh ref={droneRef1}>
-        <sphereGeometry args={[0.15, 8, 8]} />
-        <meshBasicMaterial color="#00C8FF" />
-      </mesh>
-      <mesh ref={droneRef2}>
-        <sphereGeometry args={[0.15, 8, 8]} />
-        <meshBasicMaterial color="#a78bfa" />
-      </mesh>
-      <mesh ref={droneRef3}>
-        <sphereGeometry args={[0.12, 8, 8]} />
-        <meshBasicMaterial color="#facc15" />
-      </mesh>
+      {activeLayers.drones !== false && (
+        <>
+          <mesh ref={droneRef1}>
+            <sphereGeometry args={[0.15, 8, 8]} />
+            <meshBasicMaterial color="#00C8FF" />
+          </mesh>
+          <mesh ref={droneRef2}>
+            <sphereGeometry args={[0.15, 8, 8]} />
+            <meshBasicMaterial color="#a78bfa" />
+          </mesh>
+          <mesh ref={droneRef3}>
+            <sphereGeometry args={[0.12, 8, 8]} />
+            <meshBasicMaterial color="#facc15" />
+          </mesh>
+        </>
+      )}
 
       <gridHelper args={[26, 26, "#7C5CFF", "#1e1b4b"]} position={[0, -0.5, 0]} />
 

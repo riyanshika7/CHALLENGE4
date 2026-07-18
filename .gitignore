@@ -47,11 +47,19 @@ desktop.ini
 venv/
 ENV/
 env/
+*.db-journal
+*.db-shm
+*.db-wal
+
+# Temporary / Scratch test scripts
+check_db.py
+scratch_replace_models.py
+test_commander.py
+test_translate.py
+frontend/screenshot_after_login.png
 frontend/test-results/
 .pytest_cache/
 .coverage
 .coverage.*
 htmlcov/
-*.db-journal
-*.db-shm
-*.db-wal
+

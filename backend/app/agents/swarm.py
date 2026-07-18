@@ -45,7 +45,7 @@ def coordinate_swarm_genai(event_description: str) -> dict:
     """
     
     response = client.models.generate_content(
-        model='gemini-3.1-pro',
+        model='gemini-1.5-flash',
         contents=prompt,
         config=types.GenerateContentConfig(
             system_instruction=SWARM_LEADER_INSTRUCTION,

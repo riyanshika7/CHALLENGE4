@@ -24,7 +24,7 @@ function Translator() {
     setError(null);
 
     try {
-      const res = await fetch(`${API_BASE_URL}/api/volunteer/translate`, {
+      const res = await fetch(`${API_BASE_URL}/api/translate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: queryText }),

@@ -109,11 +109,15 @@ export default function MissionCommander() {
 
   // Typing Effect for AI Reasoning
   const animateTyping = (text) => {
+    if (!text) return;
     let currentIdx = 0;
+    let currentText = '';
     setTypedReasoning('');
+    if (typingTimerRef.current) clearInterval(typingTimerRef.current);
     typingTimerRef.current = setInterval(() => {
       if (currentIdx < text.length) {
-        setTypedReasoning(prev => prev + text.charAt(currentIdx));
+        currentText += text.charAt(currentIdx);
+        setTypedReasoning(currentText);
         currentIdx += 1;
       } else {
         clearInterval(typingTimerRef.current);

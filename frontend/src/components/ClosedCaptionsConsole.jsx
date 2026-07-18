@@ -10,6 +10,11 @@ export default function ClosedCaptionsConsole({ captionText, setCaptionText }) {
   const [fontSizeRem, setFontSizeRem] = useState(1.85);
   
   const recognitionRef = useRef(null);
+  const isListeningRef = useRef(isListening);
+
+  useEffect(() => {
+    isListeningRef.current = isListening;
+  }, [isListening]);
 
   useEffect(() => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -56,7 +61,7 @@ export default function ClosedCaptionsConsole({ captionText, setCaptionText }) {
     };
 
     recognition.onend = () => {
-      if (isListening) {
+      if (isListeningRef.current) {
         try {
           recognition.start();
         } catch (e) {
@@ -70,7 +75,7 @@ export default function ClosedCaptionsConsole({ captionText, setCaptionText }) {
     return () => {
       recognition.abort();
     };
-  }, [isListening, setCaptionText]);
+  }, [setCaptionText]);
 
   const toggleListening = () => {
     if (!isSupported) return;

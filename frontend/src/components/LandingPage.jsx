@@ -271,7 +271,7 @@ export default function LandingPage({ onEnterConsole }) {
                 transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
               />
               <h1 style={{ fontSize: '1.8rem', fontWeight: '900', letterSpacing: '0.2em', background: 'linear-gradient(90deg, #46F3FF, #7C5CFF)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', margin: 0 }}>
-                ARENAOS
+                STADIUMOS
               </h1>
             </div>
 
@@ -316,7 +316,21 @@ export default function LandingPage({ onEnterConsole }) {
       {/* 3D Stadium Canvas */}
       <React.Suspense fallback={<div className="landing-vignette-overlay" style={{ background: '#02040a' }} />}>
         <div style={{ filter: `brightness(${stadiumBrightness})`, transition: 'filter 1.2s cubic-bezier(0.25, 1, 0.5, 1)' }}>
-          <DigitalTwinStadium scrollProgress={activeScenario === 'congestion' ? 0.45 : activeScenario === 'emergency' ? 0.85 : scrollProgress} />
+          <DigitalTwinStadium 
+            scrollProgress={activeScenario === 'congestion' ? 0.45 : activeScenario === 'emergency' ? 0.85 : scrollProgress} 
+            activeLayers={{
+              heatmap: heatmapActive || activeScenario === 'congestion',
+              volunteers: sensorsHUD,
+              incidents: activeScenario === 'congestion' || activeScenario === 'emergency',
+              emergency: activeScenario === 'emergency',
+              parking: false,
+              transit: false,
+              weather: false,
+              accessibility: activeScenario === 'emergency',
+              aiRecommend: activeScenario === 'congestion',
+              drones: dronesActive
+            }}
+          />
         </div>
       </React.Suspense>
       
@@ -399,42 +413,49 @@ export default function LandingPage({ onEnterConsole }) {
       {/* Premium Apple Navigation */}
       <nav className={`landing-nav ${isNavScrolled ? 'scrolled' : ''}`}>
         <div className="landing-logo">
-          <img src="/stadiumos.png" alt="ArenaOS Logo" />
-          <span>ArenaOS</span>
+          <img src="/stadiumos.png" alt="StadiumOS Logo" />
+          <span>StadiumOS</span>
         </div>
         <div className="landing-nav-links">
           <button 
             type="button"
             className="landing-nav-link" 
-            onClick={() => scrollToSection('features-section')}
+            onClick={() => setActiveDropdown(activeDropdown === 'features' ? null : 'features')}
+            style={{ color: activeDropdown === 'features' ? '#46F3FF' : '' }}
           >
             Features
           </button>
           <button 
             type="button"
             className="landing-nav-link" 
-            onClick={() => scrollToSection('digital-twin-details')}
+            onClick={() => setActiveDropdown(activeDropdown === 'twin' ? null : 'twin')}
+            style={{ color: activeDropdown === 'twin' ? '#46F3FF' : '' }}
           >
             Technology
           </button>
           <button 
             type="button"
             className="landing-nav-link" 
-            onClick={() => scrollToSection('digital-twin-details')}
+            onClick={() => setActiveDropdown(activeDropdown === 'swarm' ? null : 'swarm')}
+            style={{ color: activeDropdown === 'swarm' ? '#46F3FF' : '' }}
           >
             Architecture
           </button>
           <button 
             type="button"
             className="landing-nav-link" 
-            onClick={() => scrollToSection('sandbox-console')}
+            onClick={() => {
+              setActiveDropdown(null);
+              scrollToSection('sandbox-console');
+            }}
           >
             Demo
           </button>
           <button 
             type="button"
             className="landing-nav-link" 
-            onClick={() => scrollToSection('features-section')}
+            onClick={() => setActiveDropdown(activeDropdown === 'about' ? null : 'about')}
+            style={{ color: activeDropdown === 'about' ? '#46F3FF' : '' }}
           >
             About
           </button>
@@ -487,14 +508,18 @@ export default function LandingPage({ onEnterConsole }) {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(70, 243, 255, 0.15)', paddingBottom: '0.75rem' }}>
               <div>
                 <h3 style={{ fontSize: '1.2rem', fontWeight: 800, letterSpacing: '0.05em', color: '#46F3FF', margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  {activeDropdown === 'features' && "🌟 STADIUMOS PLATFORM KEY FEATURES"}
                   {activeDropdown === 'swarm' && "🛰️ AI AGENT SWARM DEPLOYMENT CONTROL"}
                   {activeDropdown === 'twin' && "📡 3D DIGITAL TWIN REAL-TIME CONTROLS"}
                   {activeDropdown === 'ops' && "⚙️ OPERATIONAL CORE SUBSYSTEM DIAGNOSTICS"}
+                  {activeDropdown === 'about' && "ℹ️ ABOUT THE STADIUMOS PLATFORM"}
                 </h3>
                 <span style={{ fontSize: '0.72rem', color: '#88a4b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  {activeDropdown === 'features' && "Overview // Next-gen features registry"}
                   {activeDropdown === 'swarm' && "Status: Active Sync // 4 Agent sub-nodes running"}
                   {activeDropdown === 'twin' && `Status: Connected // Simulated Occupancy: ${stadiumOccupancy}%`}
                   {activeDropdown === 'ops' && "Status: Diagnostic standby // Systems normal"}
+                  {activeDropdown === 'about' && "Metadata // PromptWars submission details"}
                 </span>
               </div>
               <button 
@@ -515,6 +540,39 @@ export default function LandingPage({ onEnterConsole }) {
                 ✕ Close
               </button>
             </div>
+
+            {/* Content: Features View */}
+            {activeDropdown === 'features' && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.1rem' }}>
+                  {[
+                    { title: '🤖 Hierarchical Agent Swarm', desc: '4 autonomous sub-agents coordinating speech de-escalation, safety triage, wheelchair routing, and predictive operations.', icon: '⚡' },
+                    { title: '📊 3D Live Digital Twin', desc: '100vh interactive stadium twin with neon boundary circles, dynamic weather sweeps, and real-time live metrics.', icon: '📡' },
+                    { title: '🧏 Deaf Accessibility Mode', desc: 'Speech-to-text transcriptions with scalable contrast-zooming and step-free wheelchair navigation filters.', icon: '🧏' },
+                    { title: '🛡️ Jury Testing Sandbox', desc: 'Secure evaluation portal accepting raw CSV/Docx/PDF uploads to safely execute stress tests.', icon: '📁' }
+                  ].map(feat => (
+                    <div 
+                      key={feat.title}
+                      style={{
+                        background: 'rgba(255,255,255,0.02)',
+                        border: '1px solid rgba(70, 243, 255, 0.15)',
+                        borderRadius: '10px',
+                        padding: '1.25rem',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.5rem',
+                        textAlign: 'left'
+                      }}
+                    >
+                      <strong style={{ fontSize: '0.9rem', color: '#46F3FF', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                        <span>{feat.icon}</span> {feat.title}
+                      </strong>
+                      <p style={{ fontSize: '0.78rem', color: '#cbd5e1', lineHeight: '1.45', margin: 0 }}>{feat.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Content: Swarm View */}
             {activeDropdown === 'swarm' && (
@@ -791,6 +849,28 @@ export default function LandingPage({ onEnterConsole }) {
                 </div>
               </div>
             )}
+            {/* Content: About View */}
+            {activeDropdown === 'about' && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', textAlign: 'left', lineHeight: '1.5' }}>
+                <p style={{ fontSize: '0.88rem', color: '#e2e8f0', margin: 0 }}>
+                  <strong>StadiumOS</strong> is a next-generation AI-powered venue command system designed to ensure safety and accessibility at scale during the FIFA World Cup 2026.
+                </p>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.25rem', marginTop: '0.5rem' }}>
+                  <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '1rem' }}>
+                    <h4 style={{ fontSize: '0.82rem', color: '#7C5CFF', margin: '0 0 0.4rem 0' }}>🎯 Goal</h4>
+                    <p style={{ fontSize: '0.72rem', color: '#94a3b8', margin: 0 }}>Optimal resource allocations and automated de-escalation for stadium volunteers.</p>
+                  </div>
+                  <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '1rem' }}>
+                    <h4 style={{ fontSize: '0.82rem', color: '#7C5CFF', margin: '0 0 0.4rem 0' }}>♿ Inclusion</h4>
+                    <p style={{ fontSize: '0.72rem', color: '#94a3b8', margin: 0 }}>Step-free pathfinding and captioning systems meeting strict WCAG criteria.</p>
+                  </div>
+                  <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '1rem' }}>
+                    <h4 style={{ fontSize: '0.82rem', color: '#7C5CFF', margin: '0 0 0.4rem 0' }}>🛡️ Security</h4>
+                    <p style={{ fontSize: '0.72rem', color: '#94a3b8', margin: 0 }}>Full-spectrum input sanitization, environment keys safety, and robust sanitization.</p>
+                  </div>
+                </div>
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
@@ -809,7 +889,7 @@ export default function LandingPage({ onEnterConsole }) {
           </motion.h1>
 
           <motion.p className="hero-sub-para min-h-[48px]" variants={itemVariants}>
-            <TypingText text="ArenaOS transforms FIFA World Cup stadiums into intelligent digital ecosystems by coordinating volunteers, organizers, and operations through real-time Generative AI." />
+            <TypingText text="StadiumOS transforms FIFA World Cup stadiums into intelligent digital ecosystems by coordinating volunteers, organizers, and operations through real-time Generative AI." />
           </motion.p>
           
           {/* Flagship Cinematic CTA Buttons with Hover Magnetic Scale */}
@@ -896,7 +976,7 @@ export default function LandingPage({ onEnterConsole }) {
       <FeaturesSection />
 
       <footer className="landing-footer">
-        <div>© 2026 ArenaOS. Built for the FIFA World Cup 2026 PromptWars.</div>
+        <div>© 2026 StadiumOS. Built for the FIFA World Cup 2026 PromptWars.</div>
       </footer>
     </div>
   );
