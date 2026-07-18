@@ -15,7 +15,7 @@ async def evaluate_submission(
     prevalidate_upload_size(file)
     try:
         contents = await file.read()
-    except Exception as e:
+    except Exception:
         raise HTTPException(status_code=400, detail="Failed to read uploaded file.")
 
     tests = []

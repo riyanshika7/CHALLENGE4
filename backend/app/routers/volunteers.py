@@ -2,7 +2,7 @@ import logging
 
 from fastapi import APIRouter, HTTPException
 
-from backend.app.security import sanitize_llm_input, sanitize_response_detail
+from backend.app.security import sanitize_response_detail
 from backend.app.agents.volunteer_copilot import handle_copilot_analysis
 
 logger = logging.getLogger("stadiumos.volunteers")

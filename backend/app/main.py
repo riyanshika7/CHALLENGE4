@@ -31,7 +31,6 @@ from backend.app.agents.vision_gate import handle_ticket_vision
 from backend.app.agents.ambient_proactive import handle_ambient_insights
 from backend.app.agents.cctv_triage import handle_cctv_analysis
 from backend.app.agents.swarm import handle_swarm_coordination
-from backend.app.agents.volunteer_copilot import handle_copilot_analysis
 from backend.app.utils import binary_search_locations
 from backend.app.weather import fetch_live_stadium_weather
 from google import genai

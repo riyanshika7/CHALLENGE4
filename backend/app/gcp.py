@@ -6,7 +6,6 @@ Firestore without making the request path depend on that external service.
 """
 import logging
 import os
-from typing import Optional
 
 from backend.app.config import FIREBASE_CREDENTIALS_PATH, FIREBASE_PROJECT_ID
 
