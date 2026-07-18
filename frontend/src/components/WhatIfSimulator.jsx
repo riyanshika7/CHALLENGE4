@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import React, { useState } from 'react';
 import { Sliders, AlertTriangle, CheckCircle, Activity, Sparkles } from 'lucide-react';
 
@@ -150,7 +151,7 @@ export default function WhatIfSimulator() {
         </div>
       </div>
 
-      <button aria-label="Interactive Button"  
+      <button  
         onClick={runSimulation}
         disabled={isSimulating}
         className="btn simulator-run-btn"

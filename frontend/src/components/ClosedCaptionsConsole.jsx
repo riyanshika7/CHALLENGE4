@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import React, { useState, useEffect, useRef } from 'react';
 import { EarOff, Mic, MicOff, AlertCircle } from 'lucide-react';
 

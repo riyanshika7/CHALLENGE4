@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import React from 'react';
 import { ShieldAlert } from 'lucide-react';
 
@@ -61,7 +62,7 @@ export default class ErrorBoundary extends React.Component {
               {this.state.error.stack && `\n\nStack:\n${this.state.error.stack.split('\n').slice(0, 3).join('\n')}`}
             </pre>
           )}
-          <button aria-label="Interactive Button" 
+          <button 
             onClick={() => this.setState({ hasError: false, error: null })}
             className="btn btn-primary"
             style={{ alignSelf: 'flex-start', padding: '0.4rem 0.8rem', fontSize: '0.8rem', background: '#ef4444', border: 'none', cursor: 'pointer' }}

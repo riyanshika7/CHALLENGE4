@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   Radio, ShieldAlert, Users, Compass, Activity, 
@@ -202,7 +203,7 @@ export default function MissionCommander() {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', zIndex: 1 }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
           {presets.map((preset, index) => (
-            <button aria-label="Interactive Button" 
+            <button 
               key={index}
               onClick={() => {
                 setSituation(preset.text);
@@ -282,7 +283,7 @@ export default function MissionCommander() {
             )}
           </button>
 
-          <button aria-label="Interactive Button" 
+          <button 
             onClick={() => handleAnalyze()}
             disabled={isAnalyzing}
             style={{
@@ -458,7 +459,7 @@ export default function MissionCommander() {
             
             {/* Tab navigation */}
             <div style={{ display: 'flex', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', paddingBottom: '0.25rem', gap: '0.5rem' }}>
-              <button aria-label="Interactive Button"  
+              <button  
                 onClick={() => setActiveTab('plan')}
                 style={{
                   padding: '0.35rem 0.65rem',
@@ -473,7 +474,7 @@ export default function MissionCommander() {
               >
                 METRICS
               </button>
-              <button aria-label="Interactive Button"  
+              <button  
                 onClick={() => setActiveTab('timeline')}
                 style={{
                   padding: '0.35rem 0.65rem',

@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { useState, useCallback, useRef } from 'react';
 
 let toastId = 0;

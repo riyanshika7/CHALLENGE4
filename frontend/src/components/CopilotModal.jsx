@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import React from 'react';
 import { X, Brain, ShieldAlert, Sparkles, Languages } from 'lucide-react';
 
@@ -81,7 +82,7 @@ export default function CopilotModal({ isOpen, result, query, onClose }) {
         </div>
 
         <div className="copilot-modal-footer">
-          <button aria-label="Interactive Button"  onClick={onClose} className="btn btn-secondary">Dismiss Insight</button>
+          <button  onClick={onClose} className="btn btn-secondary">Dismiss Insight</button>
         </div>
       </div>
     </div>

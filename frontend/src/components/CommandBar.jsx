@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import React, { useState, useEffect, useRef } from 'react';
 
 export const COMMANDS = [

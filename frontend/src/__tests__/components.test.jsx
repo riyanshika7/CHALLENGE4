@@ -271,7 +271,7 @@ describe('Constants Module', () => {
 // Accessibility — Speech Tags Are Proper Buttons (WCAG 2.1 § 4.1.2)
 // ──────────────────────────────────────────────────────────────────────────────
 describe('Speech-tag Accessibility — Proper button elements', () => {
-  it('IncidentForm template triggers are <button aria-label="Interactive Button" > elements, not <span>', () => {
+  it('IncidentForm template triggers are <button > elements, not <span>', () => {
     render(<IncidentForm onIncidentSubmitted={() => {}} />);
     const templateBtns = screen.getAllByRole('button', { name: /Template/i });
     expect(templateBtns.length).toBeGreaterThanOrEqual(3);
@@ -281,7 +281,7 @@ describe('Speech-tag Accessibility — Proper button elements', () => {
     });
   });
 
-  it('Translator language buttons are keyboard-focusable <button aria-label="Interactive Button" > elements', () => {
+  it('Translator language buttons are keyboard-focusable <button > elements', () => {
     render(<Translator />);
     const langBtns = screen.getAllByRole('button');
     // At least the 10 language simulator buttons should exist

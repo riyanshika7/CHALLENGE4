@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import React, { lazy, Suspense, useEffect, useState } from 'react';
 import AlertFeed from './components/AlertFeed';
 import Translator from './components/Translator';

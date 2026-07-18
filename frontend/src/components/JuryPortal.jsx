@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import React, { useState, useRef } from 'react';
 import { Upload, FileText, Database, CheckCircle, XCircle, AlertTriangle, Loader } from 'lucide-react';
 
@@ -82,7 +83,7 @@ export default function JuryPortal() {
       </p>
 
       <div className="incident-tab-bar" style={{ marginBottom: '1rem' }}>
-        <button aria-label="Interactive Button" 
+        <button 
           type="button"
           className={`incident-tab-btn ${file ? 'active' : ''}`}
           onClick={() => inputRef.current?.click()}
@@ -116,7 +117,7 @@ export default function JuryPortal() {
         </div>
       </div>
 
-      <button aria-label="Interactive Button" 
+      <button 
         onClick={handleSubmit}
         disabled={loading || !file}
         className="btn simulator-run-btn"

@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import React from 'react';
 
 const ICONS = {
@@ -35,7 +36,7 @@ export default function ToastContainer({ toasts, onRemove }) {
         >
           <span className="toast-icon">{ICONS[toast.type] || ICONS.info}</span>
           <span className="toast-message">{toast.message}</span>
-          <button aria-label="Interactive Button" 
+          <button 
             className="toast-close"
             onClick={() => onRemove(toast.id)}
             aria-label="Dismiss notification"

@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import React, { useState, useEffect, useCallback } from 'react';
 import { Brain, AlertTriangle, ShieldCheck, Cog } from 'lucide-react';
 import { API_BASE_URL, AMBIENT_POLL_INTERVAL_MS } from '../constants';

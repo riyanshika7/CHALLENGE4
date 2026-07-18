@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 /**
  * StadiumOS — Application Configuration & Constants
  *

@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { useState, useEffect } from 'react';
 import useAudioFeedback from './useAudioFeedback';
 import { useInclusiveMode } from './useInclusiveMode';

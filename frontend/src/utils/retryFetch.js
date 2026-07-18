@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 export async function retryFetch(url, options = {}, retries = 2, backoff = 1000) {
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {

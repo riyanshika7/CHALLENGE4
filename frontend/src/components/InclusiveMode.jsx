@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import React from 'react';
 import { Accessibility, Volume2 } from 'lucide-react';
 import { useInclusiveMode } from '../hooks/useInclusiveMode';

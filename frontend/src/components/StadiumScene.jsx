@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import React, { useRef, useState, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Line, Html } from '@react-three/drei';

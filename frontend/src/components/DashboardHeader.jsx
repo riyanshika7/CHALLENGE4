@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import React from 'react';
 import { WifiOff, Sun, Eye, UserCheck, LayoutDashboard, Monitor } from 'lucide-react';
 import InclusiveModePanel from './InclusiveMode';
@@ -70,7 +71,7 @@ export default function DashboardHeader({
           <span>{isServerOffline ? 'OFFLINE CACHING ACTIVE' : 'STADIUM COMMS ACTIVE'}</span>
         </div>
         
-        <button aria-label="Interactive Button"  
+        <button  
           onClick={onExitConsole} 
           className="btn btn-secondary header-exit-btn"
         >

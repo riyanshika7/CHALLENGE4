@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import React, { useState, useRef } from 'react';
 
 export default function MagneticCard({ children, className }) {

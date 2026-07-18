@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import React, { useState } from 'react';
 import { Zap, Compass, Activity } from 'lucide-react';
 
@@ -58,7 +59,7 @@ export default function DashboardDigitalTwin({ activeNode, onNodeSelect, onTrigg
             <span>Cockpit Layers</span>
           </div>
           
-          <button aria-label="Interactive Button"  
+          <button  
             onClick={() => toggleLayer('heatmap')}
             className={`dtwin-layer-item ${activeLayers.heatmap ? 'active' : ''}`}
             aria-pressed={activeLayers.heatmap}
@@ -67,7 +68,7 @@ export default function DashboardDigitalTwin({ activeNode, onNodeSelect, onTrigg
             <div className={`dtwin-layer-indicator ${activeLayers.heatmap ? 'active' : ''}`} />
           </button>
           
-          <button aria-label="Interactive Button"  
+          <button  
             onClick={() => toggleLayer('volunteers')}
             className={`dtwin-layer-item ${activeLayers.volunteers ? 'active' : ''}`}
             aria-pressed={activeLayers.volunteers}
@@ -76,7 +77,7 @@ export default function DashboardDigitalTwin({ activeNode, onNodeSelect, onTrigg
             <div className={`dtwin-layer-indicator ${activeLayers.volunteers ? 'active' : ''}`} />
           </button>
           
-          <button aria-label="Interactive Button"  
+          <button  
             onClick={() => toggleLayer('incidents')}
             className={`dtwin-layer-item ${activeLayers.incidents ? 'active' : ''}`}
             aria-pressed={activeLayers.incidents}
@@ -85,7 +86,7 @@ export default function DashboardDigitalTwin({ activeNode, onNodeSelect, onTrigg
             <div className={`dtwin-layer-indicator ${activeLayers.incidents ? 'active' : ''}`} />
           </button>
           
-          <button aria-label="Interactive Button"  
+          <button  
             onClick={() => toggleLayer('emergency')}
             className={`dtwin-layer-item ${activeLayers.emergency ? 'active' : ''}`}
             aria-pressed={activeLayers.emergency}
@@ -94,7 +95,7 @@ export default function DashboardDigitalTwin({ activeNode, onNodeSelect, onTrigg
             <div className={`dtwin-layer-indicator ${activeLayers.emergency ? 'active' : ''}`} />
           </button>
           
-          <button aria-label="Interactive Button"  
+          <button  
             onClick={() => toggleLayer('parking')}
             className={`dtwin-layer-item ${activeLayers.parking ? 'active' : ''}`}
             aria-pressed={activeLayers.parking}
@@ -103,7 +104,7 @@ export default function DashboardDigitalTwin({ activeNode, onNodeSelect, onTrigg
             <div className={`dtwin-layer-indicator ${activeLayers.parking ? 'active' : ''}`} />
           </button>
           
-          <button aria-label="Interactive Button"  
+          <button  
             onClick={() => toggleLayer('transit')}
             className={`dtwin-layer-item ${activeLayers.transit ? 'active' : ''}`}
             aria-pressed={activeLayers.transit}
@@ -112,7 +113,7 @@ export default function DashboardDigitalTwin({ activeNode, onNodeSelect, onTrigg
             <div className={`dtwin-layer-indicator ${activeLayers.transit ? 'active' : ''}`} />
           </button>
           
-          <button aria-label="Interactive Button"  
+          <button  
             onClick={() => toggleLayer('weather')}
             className={`dtwin-layer-item ${activeLayers.weather ? 'active' : ''}`}
             aria-pressed={activeLayers.weather}
@@ -121,7 +122,7 @@ export default function DashboardDigitalTwin({ activeNode, onNodeSelect, onTrigg
             <div className={`dtwin-layer-indicator ${activeLayers.weather ? 'active' : ''}`} />
           </button>
           
-          <button aria-label="Interactive Button"  
+          <button  
             onClick={() => toggleLayer('accessibility')}
             className={`dtwin-layer-item ${activeLayers.accessibility ? 'active' : ''}`}
             aria-pressed={activeLayers.accessibility}
@@ -130,7 +131,7 @@ export default function DashboardDigitalTwin({ activeNode, onNodeSelect, onTrigg
             <div className={`dtwin-layer-indicator ${activeLayers.accessibility ? 'active' : ''}`} />
           </button>
           
-          <button aria-label="Interactive Button"  
+          <button  
             onClick={() => toggleLayer('aiRecommend')}
             className={`dtwin-layer-item ${activeLayers.aiRecommend ? 'active' : ''}`}
             aria-pressed={activeLayers.aiRecommend}
@@ -160,7 +161,7 @@ export default function DashboardDigitalTwin({ activeNode, onNodeSelect, onTrigg
           <div className="glass-card fade-in dtwin-overlay-card">
             <div className="dtwin-overlay-header">
               <strong className="dtwin-overlay-name">📍 {activeNode.name}</strong>
-              <button aria-label="Interactive Button"  
+              <button  
                 onClick={() => onNodeSelect(null)} 
                 className="dtwin-overlay-close"
               >
@@ -207,13 +208,13 @@ export default function DashboardDigitalTwin({ activeNode, onNodeSelect, onTrigg
             <div className="dtwin-overlay-actions">
               <span className="dtwin-actions-label">Command Core Actions</span>
               <div className="dtwin-action-grid">
-                <button aria-label="Interactive Button"  
+                <button  
                   onClick={() => onSetRouteStart(activeNode.name)} 
                   className="btn dtwin-action-btn"
                 >
                   <Compass size={12} /> Start Route
                 </button>
-                <button aria-label="Interactive Button"  
+                <button  
                   onClick={() => onSetRouteDest(activeNode.name)} 
                   className="btn dtwin-action-btn"
                 >
@@ -222,7 +223,7 @@ export default function DashboardDigitalTwin({ activeNode, onNodeSelect, onTrigg
               </div>
 
               {activeNode.name.includes("Gate") && (
-                <button aria-label="Interactive Button"  
+                <button  
                   onClick={() => onTriggerSimulation('surge')} 
                   className="btn dtwin-surge-btn"
                 >

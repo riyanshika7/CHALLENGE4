@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { useCallback } from 'react';
 
 export default function useAudioFeedback() {

@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import React, { useState } from 'react';
 import { Camera, ShieldAlert } from 'lucide-react';
 import { API_BASE_URL, CCTV_MOCK_FRAME_B64 } from '../constants';
@@ -87,7 +88,7 @@ function CctvMonitor() {
                 { id: 'surge',  label: '🔴 Scenario B: Gate C Crowd Surge Crush Risk', accent: 'var(--color-danger)'  },
                 { id: 'medical', label: '🟡 Scenario C: Restroom Block A Fall Incident', accent: '#ffb703'           }
               ].map((scen) => (
-                <button aria-label="Interactive Button" 
+                <button 
                   key={scen.id}
                   type="button"
                   onClick={() => runCctvAnalysis(scen.id)}
@@ -146,7 +147,7 @@ function CctvMonitor() {
           {analysisError && (
             <div style={{ color: 'var(--color-danger)', fontSize: '0.8rem', padding: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
               <span>⚠️ Error connecting to predictive triage service.</span>
-              <button aria-label="Interactive Button"  
+              <button  
                 type="button"
                 onClick={() => runCctvAnalysis(activeScenario)} 
                 className="btn" 

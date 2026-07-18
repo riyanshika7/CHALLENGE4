@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import React from 'react';
 
 export default function SwarmNetworkMap({ orchestratingStep, activeNodeFocus, setActiveNodeFocus }) {

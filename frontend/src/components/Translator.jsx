@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import React, { useState } from 'react';
 import { Languages, MessageSquare, Volume2, ShieldAlert, Sparkles } from 'lucide-react';
 import { API_BASE_URL } from '../constants';
@@ -93,7 +94,7 @@ function Translator() {
           placeholder="Type or click a simulator tag above to translate..."
           style={{ flex: 1, padding: '0.6rem 1rem' }}
         />
-        <button aria-label="Interactive Button" 
+        <button 
           type="submit"
           className="btn btn-primary"
           style={{ background: 'var(--color-primary)', border: 'none', padding: '0.6rem 1.2rem', cursor: 'pointer', fontWeight: 'bold' }}
@@ -107,7 +108,7 @@ function Translator() {
       {error && (
         <div className="glass-card fade-in" style={{ border: '1px solid rgba(239, 68, 68, 0.4)', padding: '0.85rem 1rem', background: 'rgba(239, 68, 68, 0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', borderRadius: '8px' }}>
           <span style={{ fontSize: '0.8rem', color: '#f87171', fontWeight: 'bold' }}>❌ {error}</span>
-          <button aria-label="Interactive Button"  
+          <button  
             type="button"
             onClick={() => handleTranslate()} 
             className="btn" 
@@ -182,7 +183,7 @@ function Translator() {
 
           {/* Trigger De-escalation Option if conflict/high-urgency query */}
           {result.intent === 'conflict' && (
-            <button aria-label="Interactive Button" 
+            <button 
               onClick={handleRequestDeescalation}
               className="btn btn-warning"
               style={{

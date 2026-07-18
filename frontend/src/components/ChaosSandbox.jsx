@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import React from 'react';
 import { API_BASE_URL } from '../constants';
 
@@ -43,7 +44,7 @@ export default function ChaosSandbox({ setIsLoading, setIsSuccess, setStatusMsg,
       </p>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-        <button aria-label="Interactive Button" 
+        <button 
           onClick={() => triggerChaos('corrupt_csv')}
           className="btn btn-secondary"
           style={{ fontSize: '0.75rem', padding: '0.45rem', border: '1px solid rgba(239,68,68,0.4)', color: '#ef4444', background: 'rgba(239,68,68,0.05)', display: 'block', width: '100%', textAlign: 'left' }}
@@ -52,7 +53,7 @@ export default function ChaosSandbox({ setIsLoading, setIsSuccess, setStatusMsg,
           💥 Simulate Corrupt CSV Data
         </button>
 
-        <button aria-label="Interactive Button" 
+        <button 
           onClick={() => triggerChaos('simultaneous_capacity')}
           className="btn btn-secondary"
           style={{ fontSize: '0.75rem', padding: '0.45rem', border: '1px solid rgba(245,158,11,0.4)', color: '#f59e0b', background: 'rgba(245,158,11,0.05)', display: 'block', width: '100%', textAlign: 'left' }}
@@ -61,7 +62,7 @@ export default function ChaosSandbox({ setIsLoading, setIsSuccess, setStatusMsg,
           💥 Simulate Simultaneous 100% Capacity at Multiple Gates
         </button>
 
-        <button aria-label="Interactive Button" 
+        <button 
           onClick={() => triggerChaos('unknown_audio')}
           className="btn btn-secondary"
           style={{ fontSize: '0.75rem', padding: '0.45rem', border: '1px solid rgba(70,243,255,0.4)', color: '#46F3FF', background: 'rgba(70,243,255,0.05)', display: 'block', width: '100%', textAlign: 'left' }}

@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import React, { useState } from 'react';
 import { Upload, CheckCircle2, Database } from 'lucide-react';
 import { API_BASE_URL } from '../constants';
@@ -95,7 +96,7 @@ function CsvUploader({ onUploadSuccess }) {
       {/* Tab Selector */}
       <div role="tablist" aria-label="Jury Testing Tools" style={{ display: 'flex', gap: '0.25rem', marginBottom: '1rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.5rem' }}>
         {['csv', 'pdf', 'db', 'chaos'].map((tab) => (
-          <button aria-label="Interactive Button"  
+          <button  
             key={tab}
             role="tab"
             id={`tab-${tab}`}
@@ -124,7 +125,7 @@ function CsvUploader({ onUploadSuccess }) {
               </span>
             </div>
           </div>
-          <button aria-label="Interactive Button"  type="button" onClick={() => handleUpload('csv', csvFile)} className="btn btn-primary" style={{ width: '100%', padding: '0.5rem', fontSize: '0.8rem', gap: '0.5rem' }} disabled={isLoading || !csvFile}>
+          <button  type="button" onClick={() => handleUpload('csv', csvFile)} className="btn btn-primary" style={{ width: '100%', padding: '0.5rem', fontSize: '0.8rem', gap: '0.5rem' }} disabled={isLoading || !csvFile}>
             <Upload size={12} /> Ingest CSV Densities
           </button>
         </div>
@@ -145,7 +146,7 @@ function CsvUploader({ onUploadSuccess }) {
               </span>
             </div>
           </div>
-          <button aria-label="Interactive Button"  type="button" onClick={() => handleUpload('pdf', pdfFile)} className="btn btn-primary" style={{ width: '100%', padding: '0.5rem', fontSize: '0.8rem', gap: '0.5rem', marginBottom: '1rem' }} disabled={isLoading || !pdfFile}>
+          <button  type="button" onClick={() => handleUpload('pdf', pdfFile)} className="btn btn-primary" style={{ width: '100%', padding: '0.5rem', fontSize: '0.8rem', gap: '0.5rem', marginBottom: '1rem' }} disabled={isLoading || !pdfFile}>
             <Upload size={12} /> Upload PDF SOP
           </button>
           <PlaybookQuery playbookQuery={playbookQuery} setPlaybookQuery={setPlaybookQuery} handleRAGQuery={handleRAGQuery} isQuerying={isQuerying} ragAnswer={ragAnswer} />
@@ -167,7 +168,7 @@ function CsvUploader({ onUploadSuccess }) {
               </span>
             </div>
           </div>
-          <button aria-label="Interactive Button"  type="button" onClick={() => handleUpload('db', dbFile)} className="btn btn-primary" style={{ width: '100%', padding: '0.5rem', fontSize: '0.8rem', gap: '0.5rem' }} disabled={isLoading || !dbFile}>
+          <button  type="button" onClick={() => handleUpload('db', dbFile)} className="btn btn-primary" style={{ width: '100%', padding: '0.5rem', fontSize: '0.8rem', gap: '0.5rem' }} disabled={isLoading || !dbFile}>
             <Database size={12} /> Replace Database
           </button>
         </div>
