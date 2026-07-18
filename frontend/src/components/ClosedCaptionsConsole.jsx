@@ -219,7 +219,7 @@ export default function ClosedCaptionsConsole({ captionText, setCaptionText }) {
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', justifyContent: 'flex-start', marginTop: '0.5rem', marginBottom: '0.25rem', flexWrap: 'wrap' }}>
         <span id="caption-font-size-label" style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#ffea00', letterSpacing: '0.05em' }}>TEXT ZOOM:</span>
         <div role="group" aria-labelledby="caption-font-size-label" style={{ display: 'flex', gap: '0.35rem' }}>
-          <button
+          <button 
             type="button"
             onClick={() => setFontSizeRem(prev => Math.max(1.2, prev - 0.2))}
             aria-label="Decrease caption text size"
@@ -237,7 +237,7 @@ export default function ClosedCaptionsConsole({ captionText, setCaptionText }) {
           >
             A -
           </button>
-          <button
+          <button 
             type="button"
             onClick={() => setFontSizeRem(1.85)}
             aria-label="Reset caption text size to default"
@@ -255,7 +255,7 @@ export default function ClosedCaptionsConsole({ captionText, setCaptionText }) {
           >
             DEFAULT ({Math.round((fontSizeRem / 1.85) * 100)}%)
           </button>
-          <button
+          <button 
             type="button"
             onClick={() => setFontSizeRem(prev => Math.min(3.5, prev + 0.2))}
             aria-label="Increase caption text size"

@@ -417,35 +417,35 @@ export default function LandingPage({ onEnterConsole }) {
           <span>StadiumOS</span>
         </div>
         <div className="landing-nav-links">
-          <button 
+          <button aria-label="Interactive Button"  
             type="button"
             className="landing-nav-link" 
             onClick={() => scrollToSection('features-section')}
           >
             Features
           </button>
-          <button 
+          <button aria-label="Interactive Button"  
             type="button"
             className="landing-nav-link" 
             onClick={() => scrollToSection('technology-section')}
           >
             Technology
           </button>
-          <button 
+          <button aria-label="Interactive Button"  
             type="button"
             className="landing-nav-link" 
             onClick={() => scrollToSection('architecture-section')}
           >
             Architecture
           </button>
-          <button 
+          <button aria-label="Interactive Button"  
             type="button"
             className="landing-nav-link" 
             onClick={() => scrollToSection('sandbox-console')}
           >
             Demo
           </button>
-          <button 
+          <button aria-label="Interactive Button"  
             type="button"
             className="landing-nav-link" 
             onClick={() => scrollToSection('about-section')}
@@ -460,7 +460,7 @@ export default function LandingPage({ onEnterConsole }) {
           >
             GitHub
           </a>
-          <button className="btn-neon-cta" onClick={(e) => { handleButtonRipple(e); setTimeout(onEnterConsole, 300); }}>
+          <button aria-label="Interactive Button"  className="btn-neon-cta" onClick={(e) => { handleButtonRipple(e); setTimeout(onEnterConsole, 300); }}>
             Launch AI <Zap size={14} style={{ fill: '#ffffff' }} />
           </button>
         </div>
@@ -547,15 +547,15 @@ export default function LandingPage({ onEnterConsole }) {
             <h3 className="text-xl font-bold font-header mb-2 text-[#46F3FF]">⚡ Interactive Digital Twin Sandbox</h3>
             <p className="text-sm text-slate-400 mb-6">Simulate operational stadium scenarios to see the 3D Digital Twin respond, highlight paths, and compute redirect routes.</p>
             <div className="sandbox-scenarios-box">
-              <button className={`btn-sandbox-option ${activeScenario === 'normal' ? 'active' : ''}`} onClick={() => setActiveScenario('normal')}>
+              <button aria-label="Interactive Button"  className={`btn-sandbox-option ${activeScenario === 'normal' ? 'active' : ''}`} onClick={() => setActiveScenario('normal')}>
                 <span>🟢 Normal Operations</span>
                 <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500">Active</span>
               </button>
-              <button className={`btn-sandbox-option ${activeScenario === 'congestion' ? 'active' : ''}`} onClick={() => setActiveScenario('congestion')}>
+              <button aria-label="Interactive Button"  className={`btn-sandbox-option ${activeScenario === 'congestion' ? 'active' : ''}`} onClick={() => setActiveScenario('congestion')}>
                 <span>🟡 Concourse Warning</span>
                 <span className="text-[10px] uppercase font-bold tracking-wider text-amber-500">Simulate Gate C Surge</span>
               </button>
-              <button className={`btn-sandbox-option ${activeScenario === 'emergency' ? 'active' : ''}`} onClick={() => setActiveScenario('emergency')}>
+              <button aria-label="Interactive Button"  className={`btn-sandbox-option ${activeScenario === 'emergency' ? 'active' : ''}`} onClick={() => setActiveScenario('emergency')}>
                 <span>🔴 Emergency Bypass</span>
                 <span className="text-[10px] uppercase font-bold tracking-wider text-red-500">Trigger Critical Event</span>
               </button>

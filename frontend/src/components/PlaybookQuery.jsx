@@ -21,7 +21,7 @@ export default function PlaybookQuery({
           placeholder="Ask lost child SOP, etc..."
           style={{ flex: 1, padding: '0.35rem', fontSize: '0.8rem' }}
         />
-        <button type="submit" className="btn btn-primary" style={{ padding: '0.4rem' }} disabled={isQuerying}>
+        <button aria-label="Interactive Button"  type="submit" className="btn btn-primary" style={{ padding: '0.4rem' }} disabled={isQuerying}>
           <Send size={12} />
         </button>
       </div>

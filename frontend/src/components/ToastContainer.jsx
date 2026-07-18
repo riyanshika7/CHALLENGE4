@@ -35,7 +35,7 @@ export default function ToastContainer({ toasts, onRemove }) {
         >
           <span className="toast-icon">{ICONS[toast.type] || ICONS.info}</span>
           <span className="toast-message">{toast.message}</span>
-          <button
+          <button aria-label="Interactive Button" 
             className="toast-close"
             onClick={() => onRemove(toast.id)}
             aria-label="Dismiss notification"

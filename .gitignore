@@ -64,4 +64,5 @@ frontend/coverage/
 .coverage
 .coverage.*
 htmlcov/
+*,cover
 

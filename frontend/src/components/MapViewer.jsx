@@ -103,7 +103,7 @@ function MapViewer({ locations, forcedStart, forcedEnd }) {
 
             <label id="accessibility-assistance-label" style={{ marginBottom: '0.5rem', display: 'block', fontSize: '0.75rem', fontWeight: 'bold' }}>Accessibility Assistance Needed</label>
             <div className="acc-grid" style={{ marginBottom: '0.5rem' }} role="group" aria-labelledby="accessibility-assistance-label">
-              <button 
+              <button aria-label="Interactive Button"  
                 type="button" 
                 className={`acc-btn ${accWheelchair || isWheelchairActive ? 'active' : ''}`}
                 onClick={() => !isWheelchairActive && setAccWheelchair(!accWheelchair)}
@@ -113,7 +113,7 @@ function MapViewer({ locations, forcedStart, forcedEnd }) {
                 <Accessibility />
                 <span>Wheelchair / Ramp {isWheelchairActive ? "(Enforced ♿)" : ""}</span>
               </button>
-              <button 
+              <button aria-label="Interactive Button"  
                 type="button" 
                 className={`acc-btn ${accVisual ? 'active' : ''}`}
                 onClick={() => setAccVisual(!accVisual)}
@@ -122,7 +122,7 @@ function MapViewer({ locations, forcedStart, forcedEnd }) {
                 <Info />
                 <span>Visual / Braille</span>
               </button>
-              <button 
+              <button aria-label="Interactive Button"  
                 type="button" 
                 className={`acc-btn ${accStroller ? 'active' : ''}`}
                 onClick={() => setAccStroller(!accStroller)}

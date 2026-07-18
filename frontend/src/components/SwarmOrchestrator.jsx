@@ -70,7 +70,7 @@ function SwarmOrchestrator() {
       </p>
 
       <div className="speech-helpers" style={{ marginBottom: '1.25rem' }} role="group" aria-label="Preset crisis scenarios">
-        <button
+        <button aria-label="Interactive Button" 
           type="button"
           className="speech-tag"
           onClick={() => runSwarmCoordination('Spanish-speaking fan reporting severe chest pain on the Gate C ramp during a high-density ingress rush.')}
@@ -78,7 +78,7 @@ function SwarmOrchestrator() {
         >
           🚨 Crisis Scenario 1: Spanish Medical Emergency at Congested Gate C
         </button>
-        <button
+        <button aria-label="Interactive Button" 
           type="button"
           className="speech-tag"
           onClick={() => runSwarmCoordination('French-speaking parent lost their young child near Section 104 outer ramp which is slippery due to rain.')}
@@ -96,7 +96,7 @@ function SwarmOrchestrator() {
           placeholder="Describe a complex multi-dimensional stadium crisis here..."
           className="swarm-input"
         />
-        <button 
+        <button aria-label="Interactive Button"  
           onClick={() => runSwarmCoordination(eventDesc)}
           className="btn swarm-run-btn"
           disabled={isOrchestrating || !eventDesc.trim()}

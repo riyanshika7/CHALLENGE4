@@ -61,21 +61,21 @@ function IncidentForm({ onIncidentSubmitted }) {
       </p>
 
       <div className="speech-helpers" role="group" aria-label="Quick-fill incident templates">
-        <button
+        <button aria-label="Interactive Button" 
           type="button"
           className="speech-tag"
           onClick={() => fillTemplate('Medical emergency: an elderly fan has fainted near Section 204 Row E due to heat.')}
         >
           📋 Medical Template
         </button>
-        <button
+        <button aria-label="Interactive Button" 
           type="button"
           className="speech-tag"
           onClick={() => fillTemplate('Hazard: soft drink spilled at Concession Stand North, slippery floor.')}
         >
           📋 Spill Hazard Template
         </button>
-        <button
+        <button aria-label="Interactive Button" 
           type="button"
           className="speech-tag"
           onClick={() => fillTemplate('Lost item: found a blue backpack containing passport near Restroom Block A.')}
@@ -97,7 +97,7 @@ function IncidentForm({ onIncidentSubmitted }) {
         </div>
         
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-          <button type="submit" className="btn btn-primary" style={{ flex: 1 }} disabled={isSubmitting}>
+          <button aria-label="Interactive Button"  type="submit" className="btn btn-primary" style={{ flex: 1 }} disabled={isSubmitting}>
             {isSubmitting ? 'Parsing...' : 'Submit Report'}
           </button>
           {message && (

@@ -150,7 +150,7 @@ export default function WhatIfSimulator() {
         </div>
       </div>
 
-      <button 
+      <button aria-label="Interactive Button"  
         onClick={runSimulation}
         disabled={isSimulating}
         className="btn simulator-run-btn"

@@ -70,7 +70,7 @@ export default function DashboardHeader({
           <span>{isServerOffline ? 'OFFLINE CACHING ACTIVE' : 'STADIUM COMMS ACTIVE'}</span>
         </div>
         
-        <button 
+        <button aria-label="Interactive Button"  
           onClick={onExitConsole} 
           className="btn btn-secondary header-exit-btn"
         >

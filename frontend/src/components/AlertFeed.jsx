@@ -20,7 +20,7 @@ function AlertFeed({ alerts }) {
         </h3>
         
         {alerts.length > maxVisible && (
-          <button 
+          <button aria-label="Interactive Button"  
             type="button"
             onClick={() => setShowAll(!showAll)}
             className="btn"

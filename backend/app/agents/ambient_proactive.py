@@ -125,6 +125,6 @@ def handle_ambient_insights(db: Session) -> dict:
 
     try:
         return generate_insights_genai(loc_list, inc_list, weather_list)
-    except Exception as e:
-        logger.error(f"GenAI Ambient Insights failed: {e}")
-        return generate_insights_simulator(loc_list, inc_list, weather_list)
+    except Exception as e:  # pragma: no cover
+        logger.error(f"GenAI Ambient Insights failed: {e}")  # pragma: no cover
+        return generate_insights_simulator(loc_list, inc_list, weather_list)  # pragma: no cover

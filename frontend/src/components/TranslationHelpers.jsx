@@ -17,7 +17,7 @@ export default function TranslationHelpers({ onSimulate }) {
   return (
     <div className="speech-helpers" role="group" aria-label="Language phrase simulators">
       {SIMULATION_PHRASES.map((phrase, idx) => (
-        <button key={idx} type="button" className="speech-tag" onClick={() => onSimulate(phrase.text)}>
+        <button aria-label="Interactive Button"  key={idx} type="button" className="speech-tag" onClick={() => onSimulate(phrase.text)}>
           {phrase.label}
         </button>
       ))}

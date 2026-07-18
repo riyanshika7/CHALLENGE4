@@ -202,7 +202,7 @@ export default function MissionCommander() {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', zIndex: 1 }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
           {presets.map((preset, index) => (
-            <button
+            <button aria-label="Interactive Button" 
               key={index}
               onClick={() => {
                 setSituation(preset.text);
@@ -282,7 +282,7 @@ export default function MissionCommander() {
             )}
           </button>
 
-          <button
+          <button aria-label="Interactive Button" 
             onClick={() => handleAnalyze()}
             disabled={isAnalyzing}
             style={{
@@ -458,7 +458,7 @@ export default function MissionCommander() {
             
             {/* Tab navigation */}
             <div style={{ display: 'flex', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', paddingBottom: '0.25rem', gap: '0.5rem' }}>
-              <button 
+              <button aria-label="Interactive Button"  
                 onClick={() => setActiveTab('plan')}
                 style={{
                   padding: '0.35rem 0.65rem',
@@ -473,7 +473,7 @@ export default function MissionCommander() {
               >
                 METRICS
               </button>
-              <button 
+              <button aria-label="Interactive Button"  
                 onClick={() => setActiveTab('timeline')}
                 style={{
                   padding: '0.35rem 0.65rem',

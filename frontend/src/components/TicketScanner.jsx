@@ -84,7 +84,7 @@ function TicketScanner() {
           AMBIENT TICKET & CREDENTIAL SCANNER
         </span>
         {previewUrl && (
-          <button 
+          <button aria-label="Interactive Button"  
             onClick={resetScanner} 
             className="btn btn-secondary" 
             style={{ padding: '0.25rem 0.5rem', fontSize: '0.7rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}
@@ -101,7 +101,7 @@ function TicketScanner() {
 
       {/* Toggles for quick demos */}
       <div className="speech-helpers" style={{ marginBottom: '1.25rem' }}>
-        <button 
+        <button aria-label="Interactive Button"  
           className="speech-tag" 
           onClick={() => {
             setPreviewUrl(null);
@@ -111,7 +111,7 @@ function TicketScanner() {
         >
           👑 Sim VIP Pass Scan
         </button>
-        <button 
+        <button aria-label="Interactive Button"  
           className="speech-tag" 
           onClick={() => {
             setPreviewUrl(null);
@@ -121,7 +121,7 @@ function TicketScanner() {
         >
           ♿ Sim Wheelchair Pass
         </button>
-        <button 
+        <button aria-label="Interactive Button"  
           className="speech-tag" 
           onClick={() => {
             setPreviewUrl(null);

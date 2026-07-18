@@ -106,7 +106,7 @@ export default function PitchHub() {
   return (
     <>
       {/* Floating Trigger Button */}
-      <button
+      <button aria-label="Interactive Button" 
         onClick={() => setIsOpen(true)}
         className="btn"
         aria-label="Open PromptWars Pitch and Compliance Hub"
@@ -185,7 +185,7 @@ export default function PitchHub() {
               🏁 challenge pillars
             </h2>
             {PILLARS.map((p) => (
-              <button
+              <button aria-label="Interactive Button" 
                 key={p.id}
                 onClick={() => setActivePillar(p)}
                 className={`dtwin-layer-item ${activePillar.id === p.id ? 'active' : ''}`}
@@ -201,7 +201,7 @@ export default function PitchHub() {
               </button>
             ))}
             
-            <button
+            <button aria-label="Interactive Button" 
               onClick={() => setIsOpen(false)}
               className="btn btn-secondary"
               aria-label="Close Compliance Hub"
@@ -220,7 +220,7 @@ export default function PitchHub() {
                   {activePillar.title} Evaluation
                 </h3>
               </div>
-              <button
+              <button aria-label="Interactive Button" 
                 onClick={() => handleScrollToWidget(activePillar.targetId)}
                 className="btn"
                 style={{

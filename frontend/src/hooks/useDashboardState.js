@@ -145,7 +145,7 @@ export default function useDashboardState(toast) {
     }
   };
 
-  const fetchMissionStatus = async (silentFail = false) => {
+  async function fetchMissionStatus(silentFail = false) {
     try {
       const data = await retryFetchJson(`${API_BASE_URL}/api/mission-control`);
       setMissionStatus(data);
@@ -154,7 +154,7 @@ export default function useDashboardState(toast) {
     }
   };
 
-  const fetchLocations = async () => {
+  async function fetchLocations() {
     try {
       const data = await retryFetchJson(`${API_BASE_URL}/api/locations`);
       setLocations(data);
@@ -165,7 +165,7 @@ export default function useDashboardState(toast) {
     }
   };
 
-  const fetchAlerts = async () => {
+  async function fetchAlerts() {
     try {
       const data = await retryFetchJson(`${API_BASE_URL}/api/alerts`);
       setAlerts(data);
@@ -175,7 +175,7 @@ export default function useDashboardState(toast) {
     }
   };
 
-  const fetchIncidents = async () => {
+  async function fetchIncidents() {
     try {
       const data = await retryFetchJson(`${API_BASE_URL}/api/incidents`);
       setIncidents(data);
@@ -185,7 +185,7 @@ export default function useDashboardState(toast) {
     }
   };
 
-  const checkAndSyncOfflineQueue = async () => {
+  async function checkAndSyncOfflineQueue() {
     const cached = localStorage.getItem(OFFLINE_INCIDENTS_KEY);
     if (!cached) return;
     const queue = JSON.parse(cached);

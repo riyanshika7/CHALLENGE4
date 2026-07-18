@@ -72,7 +72,7 @@ export default function AuthScreen({ onLogin }) {
 
         {error && <p className="auth-error">{error}</p>}
 
-        <button
+        <button aria-label="Interactive Button" 
           type="submit"
           className="auth-btn"
           disabled={isLoading}

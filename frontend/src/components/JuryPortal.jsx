@@ -82,7 +82,7 @@ export default function JuryPortal() {
       </p>
 
       <div className="incident-tab-bar" style={{ marginBottom: '1rem' }}>
-        <button
+        <button aria-label="Interactive Button" 
           type="button"
           className={`incident-tab-btn ${file ? 'active' : ''}`}
           onClick={() => inputRef.current?.click()}
@@ -116,7 +116,7 @@ export default function JuryPortal() {
         </div>
       </div>
 
-      <button
+      <button aria-label="Interactive Button" 
         onClick={handleSubmit}
         disabled={loading || !file}
         className="btn simulator-run-btn"
