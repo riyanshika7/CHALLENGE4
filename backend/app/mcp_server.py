@@ -8,6 +8,7 @@ from backend.app.models import Incident, Alert
 logging.basicConfig(level=logging.INFO, stream=sys.stderr)
 logger = logging.getLogger("stadiumos-mcp")
 
+
 def handle_initialize(request_id):
     """Responds to MCP initialize handshake."""
     response = {
@@ -25,6 +26,7 @@ def handle_initialize(request_id):
         }
     }
     return response
+
 
 def handle_list_tools(request_id):
     """Lists available tools to the MCP client."""
@@ -73,6 +75,7 @@ def handle_list_tools(request_id):
     }
     return response
 
+
 def execute_tool(tool_name, arguments):
     """Executes the specific tool against the SQLite database."""
     db: Session = SessionLocal()
@@ -90,13 +93,13 @@ def execute_tool(tool_name, arguments):
                     "status": inc.status
                 })
             return {"content": [{"type": "text", "text": json.dumps(output, indent=2)}]}
-            
+
         elif tool_name == "create_stadium_incident":
             category = arguments.get("category", "general")
             location = arguments.get("location", "unknown")
             description = arguments.get("description", "")
             urgency = arguments.get("urgency", "low")
-            
+
             incident = Incident(
                 category=category,
                 location=location,
@@ -107,14 +110,14 @@ def execute_tool(tool_name, arguments):
             db.add(incident)
             db.commit()
             db.refresh(incident)
-            
+
             return {"content": [{"type": "text", "text": f"Successfully created incident ID {incident.id} with status open."}]}
-            
+
         elif tool_name == "push_stadium_alert":
             title = arguments.get("title")
             message = arguments.get("message")
             alert_type = arguments.get("type", "info")
-            
+
             alert = Alert(
                 title=title,
                 message=message,
@@ -123,9 +126,9 @@ def execute_tool(tool_name, arguments):
             )
             db.add(alert)
             db.commit()
-            
+
             return {"content": [{"type": "text", "text": f"Successfully broadcasted alert: '{title}'."}]}
-            
+
         else:
             return {"isError": True, "content": [{"type": "text", "text": f"Unknown tool: {tool_name}"}]}
     except Exception as e:
@@ -134,9 +137,10 @@ def execute_tool(tool_name, arguments):
     finally:
         db.close()
 
+
 def main():
     logger.info("StadiumOS Stdio MCP Server started.")
-    
+
     for line in sys.stdin:
         if not line.strip():
             continue
@@ -144,7 +148,7 @@ def main():
             request = json.loads(line)
             req_id = request.get("id")
             method = request.get("method")
-            
+
             if method == "initialize":
                 response = handle_initialize(req_id)
             elif method == "tools/list":
@@ -153,7 +157,7 @@ def main():
                 params = request.get("params", {})
                 name = params.get("name")
                 arguments = params.get("arguments", {})
-                
+
                 result = execute_tool(name, arguments)
                 response = {
                     "jsonrpc": "2.0",
@@ -169,12 +173,13 @@ def main():
                         "message": f"Method not found: {method}"
                     }
                 }
-            
+
             sys.stdout.write(json.dumps(response) + "\n")
             sys.stdout.flush()
-            
+
         except Exception as e:
             logger.error(f"Error handling MCP input line: {e}")
+
 
 if __name__ == "__main__":
     main()

@@ -43,17 +43,18 @@ You MUST return a JSON object matching this schema:
 Do not include markdown code block characters like ```json, return ONLY the raw JSON text.
 """
 
+
 def analyze_ticket_vision_genai(image_b64: str) -> dict:
     """Invokes Gemini Multimodal Vision API to parse ticket image."""
     client = genai.Client(api_key=GEMINI_API_KEY)
-    
+
     if "," in image_b64:
         image_b64 = image_b64.split(",")[1]
-        
+
     image_data = base64.b64decode(image_b64)
-    
+
     response = client.models.generate_content(
-        model='gemini-1.5-flash',
+        model='gemini-2.0-flash',
         contents=[
             types.Part.from_bytes(
                 data=image_data,
@@ -67,9 +68,10 @@ def analyze_ticket_vision_genai(image_b64: str) -> dict:
             temperature=0.1
         )
     )
-    
+
     result = json.loads(response.text.strip())
     return result
+
 
 def analyze_ticket_vision_simulator(ticket_type: str = "general") -> dict:
     """Local fallback simulator for ticket vision validation based on profile selections."""
@@ -141,6 +143,7 @@ def analyze_ticket_vision_simulator(ticket_type: str = "general") -> dict:
             "volunteer_action_guide": "DENY ENTRY: Do not admit the fan. Direct them to the Ticket Resolution Window at Gate A."
         }
 
+
 def _is_non_ticket_by_filename(filename: str) -> bool:
     """Returns True if the filename contains keywords that suggest a non-ticket image."""
     if not filename:
@@ -164,8 +167,8 @@ def handle_ticket_vision(image_b64: str, ticket_type: str = "general", filename:
             if "," in b64_str:
                 b64_str = b64_str.split(",")[1]
             uploaded_bytes = base64.b64decode(b64_str)
-            uploaded_hash = hashlib.md5(uploaded_bytes).hexdigest()
-            
+            uploaded_hash = hashlib.sha256(uploaded_bytes).hexdigest()
+
             # Check for test mock bypass: short base64 + filename match
             if len(b64_str) < 500 and filename:
                 fn_lower = filename.lower()
@@ -174,17 +177,19 @@ def handle_ticket_vision(image_b64: str, ticket_type: str = "general", filename:
 
             if not is_actual:
                 # Locate ACTUAL FIFA.jpg in workspace root
-                actual_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "ACTUAL FIFA.jpg")
+                actual_path = os.path.join(os.path.dirname(os.path.dirname(
+                    os.path.dirname(os.path.abspath(__file__)))), "ACTUAL FIFA.jpg")
                 if os.path.exists(actual_path):
                     with open(actual_path, "rb") as f:
                         actual_bytes = f.read()
-                    actual_hash = hashlib.md5(actual_bytes).hexdigest()
-                    
+                    actual_hash = hashlib.sha256(actual_bytes).hexdigest()
+
                     if uploaded_hash == actual_hash:
-                        logger.info("Uploaded ticket matches ACTUAL FIFA.jpg exactly by MD5 hash.")
+                        logger.info("Uploaded ticket matches ACTUAL FIFA.jpg exactly by SHA256 hash.")
                         is_actual = True
                     else:
-                        logger.warning(f"Uploaded file hash ({uploaded_hash}) does not match ACTUAL FIFA.jpg hash ({actual_hash}).")
+                        logger.warning(
+                            f"Uploaded file hash ({uploaded_hash}) does not match ACTUAL FIFA.jpg hash ({actual_hash}).")
                 else:
                     # Fallback to filename/size check if ACTUAL FIFA.jpg is missing
                     actual_len = 13849

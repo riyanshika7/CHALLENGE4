@@ -43,6 +43,8 @@ You MUST analyze the input situation and produce a JSON object matching this sch
 Ensure all instructions in recommendations are highly actionable for stadium volunteers and security crews.
 Return ONLY the raw JSON text, with NO markdown code block formatting (do not wrap in ```json).
 """
+
+
 def handle_mission_command(situation: str) -> dict:
     """Invokes Gemini or fallback simulator to generate a futuristic command bridge operational plan with the 7-stage PromptWars explanation schema."""
     raw = {}
@@ -53,7 +55,7 @@ def handle_mission_command(situation: str) -> dict:
         try:
             client = genai.Client(api_key=GEMINI_API_KEY)
             response = client.models.generate_content(
-                model='gemini-1.5-flash',
+                model='gemini-2.0-flash',
                 contents=f"Generate an operational plan for: '{situation}'",
                 config=types.GenerateContentConfig(
                     system_instruction=SYSTEM_INSTRUCTION,
@@ -112,18 +114,20 @@ def handle_mission_command(situation: str) -> dict:
             raw["expected_impact"] = "Resolves operational incident and restores normal service levels."
 
     if "explanation" not in raw:
-        raw["explanation"] = raw.get("ai_reasoning", "Assessed situation dynamics and calculated optimal multi-vector response.")
-    
+        raw["explanation"] = raw.get(
+            "ai_reasoning", "Assessed situation dynamics and calculated optimal multi-vector response.")
+
     # Ensure backward compatibility aliases exist
     if "ai_reasoning" not in raw:
         raw["ai_reasoning"] = raw["explanation"]
-        
+
     return raw
+
 
 def get_simulated_mission_plan(situation: str) -> dict:
     """Pre-set, highly detailed mock responses matching the required schema for standard scenarios."""
     query = situation.lower()
-    
+
     # 1. Gate 4 overcrowding
     if "gate" in query or "overcrowd" in query or "crowd" in query:
         return {
@@ -139,10 +143,14 @@ def get_simulated_mission_plan(situation: str) -> dict:
             "predicted_resolution_time": "15 minutes",
             "confidence_score": 96.4,
             "recommendations": [
-                {"action": "Open Gate 5 & Gate 6 bypass scanners", "why": "To distribute the queue burden and clear the central plaza bottleneck."},
-                {"action": "Deploy 8 crowd-control volunteers to Plaza 4", "why": "To actively guide incoming fans towards the underutilized Gate 5 entrances."},
-                {"action": "Broadcast multilingual redirect announcement", "why": "To inform non-English speakers of faster entry points via Gates 5 & 6."},
-                {"action": "Enable wheelchair rerouting via West Ramp B", "why": "To bypass the congested Gate 4 ramp and maintain accessibility compliance."}
+                {"action": "Open Gate 5 & Gate 6 bypass scanners",
+                    "why": "To distribute the queue burden and clear the central plaza bottleneck."},
+                {"action": "Deploy 8 crowd-control volunteers to Plaza 4",
+                    "why": "To actively guide incoming fans towards the underutilized Gate 5 entrances."},
+                {"action": "Broadcast multilingual redirect announcement",
+                    "why": "To inform non-English speakers of faster entry points via Gates 5 & 6."},
+                {"action": "Enable wheelchair rerouting via West Ramp B",
+                    "why": "To bypass the congested Gate 4 ramp and maintain accessibility compliance."}
             ],
             "timeline": [
                 "T-0m: Ingress bottleneck detected at Gate 4 scanning zone.",
@@ -151,7 +159,7 @@ def get_simulated_mission_plan(situation: str) -> dict:
                 "T+10m: Queue density reduced to nominal levels; transit flows normalized."
             ]
         }
-        
+
     # 2. Heavy rain
     elif "rain" in query or "storm" in query or "weather" in query:
         return {
@@ -167,10 +175,14 @@ def get_simulated_mission_plan(situation: str) -> dict:
             "predicted_resolution_time": "40 minutes",
             "confidence_score": 92.1,
             "recommendations": [
-                {"action": "Activate indoor concourse shelter zones", "why": "To provide dry assembly spaces for fans currently located in uncovered plaza areas."},
-                {"action": "Reroute wheelchair/stroller fans to internal elevators", "why": "To prevent hazardous descents on wet, exposed outdoor ramps."},
-                {"action": "Deploy additional floor-drying crews with squeegees", "why": "To proactively manage pooling water at concourse thresholds and exit gates."},
-                {"action": "Disable T-Minus display timer alerts", "why": "To reduce urgency and encourage fans to walk calmly rather than run."}
+                {"action": "Activate indoor concourse shelter zones",
+                    "why": "To provide dry assembly spaces for fans currently located in uncovered plaza areas."},
+                {"action": "Reroute wheelchair/stroller fans to internal elevators",
+                    "why": "To prevent hazardous descents on wet, exposed outdoor ramps."},
+                {"action": "Deploy additional floor-drying crews with squeegees",
+                    "why": "To proactively manage pooling water at concourse thresholds and exit gates."},
+                {"action": "Disable T-Minus display timer alerts",
+                    "why": "To reduce urgency and encourage fans to walk calmly rather than run."}
             ],
             "timeline": [
                 "T-15m: Convective rain warning received from Meteorological Office.",
@@ -179,7 +191,7 @@ def get_simulated_mission_plan(situation: str) -> dict:
                 "T+20m: Rain starts; outdoor concourses successfully cleared with zero injuries reported."
             ]
         }
-        
+
     # 3. Lost child
     elif "child" in query or "lost" in query or "missing" in query:
         return {
@@ -195,10 +207,14 @@ def get_simulated_mission_plan(situation: str) -> dict:
             "predicted_resolution_time": "10 minutes",
             "confidence_score": 98.0,
             "recommendations": [
-                {"action": "Lockdown Gate B exit lanes", "why": "To prevent the child from leaving the stadium boundaries while search is active."},
-                {"action": "Deploy 6 search volunteers to Section 102 stand quadrant", "why": "To perform a rapid sweep of public seating, restrooms, and concession lobbies."},
-                {"action": "Assign de-escalation coach to the reporting parent", "why": "To manage severe panic and maintain communication at the sector post."},
-                {"action": "Broadcast child description to all security radios", "why": "To engage all gate personnel in active monitoring."}
+                {"action": "Lockdown Gate B exit lanes",
+                    "why": "To prevent the child from leaving the stadium boundaries while search is active."},
+                {"action": "Deploy 6 search volunteers to Section 102 stand quadrant",
+                    "why": "To perform a rapid sweep of public seating, restrooms, and concession lobbies."},
+                {"action": "Assign de-escalation coach to the reporting parent",
+                    "why": "To manage severe panic and maintain communication at the sector post."},
+                {"action": "Broadcast child description to all security radios",
+                    "why": "To engage all gate personnel in active monitoring."}
             ],
             "timeline": [
                 "T-0m: Incident logged by Section 102 volunteer.",
@@ -207,7 +223,7 @@ def get_simulated_mission_plan(situation: str) -> dict:
                 "T+8m: Child located safe at north ice-cream kiosk; parent reunited."
             ]
         }
-        
+
     # 4. Medical emergency in Section C
     elif "medical" in query or "heart" in query or "chest" in query or "injury" in query or "section c" in query:
         return {
@@ -223,10 +239,14 @@ def get_simulated_mission_plan(situation: str) -> dict:
             "predicted_resolution_time": "12 minutes",
             "confidence_score": 99.1,
             "recommendations": [
-                {"action": "Dispatch 2 medical responders with AED immediately", "why": "To initiate immediate first-aid chest compression/stabilization at the scene."},
-                {"action": "Clear Section C aisle ways and exit stairs", "why": "To ensure unhindered access for incoming stretcher teams."},
-                {"action": "Alert Gate A security for ambulance arrival", "why": "To expedite emergency vehicle entry and guide responders to Section C."},
-                {"action": "Deploy 2 volunteers to support companions", "why": "To offer translation, comfort, and escort support to the patient's family."}
+                {"action": "Dispatch 2 medical responders with AED immediately",
+                    "why": "To initiate immediate first-aid chest compression/stabilization at the scene."},
+                {"action": "Clear Section C aisle ways and exit stairs",
+                    "why": "To ensure unhindered access for incoming stretcher teams."},
+                {"action": "Alert Gate A security for ambulance arrival",
+                    "why": "To expedite emergency vehicle entry and guide responders to Section C."},
+                {"action": "Deploy 2 volunteers to support companions",
+                    "why": "To offer translation, comfort, and escort support to the patient's family."}
             ],
             "timeline": [
                 "T-0m: Collapsed fan alert received via volunteer app.",
@@ -235,7 +255,7 @@ def get_simulated_mission_plan(situation: str) -> dict:
                 "T+9m: Stretcher extraction completed; patient loaded into Gate A ambulance."
             ]
         }
-        
+
     # 5. Metro delayed
     elif "metro" in query or "delay" in query or "train" in query or "transit" in query:
         return {
@@ -251,10 +271,14 @@ def get_simulated_mission_plan(situation: str) -> dict:
             "predicted_resolution_time": "25 minutes",
             "confidence_score": 91.0,
             "recommendations": [
-                {"action": "Notify transportation team to dispatch standby buses", "why": "To provide immediate alternative transit capacity and drain queue build-up."},
-                {"action": "Extend stadium food/concession operations by 20 minutes", "why": "To encourage fans to stay inside the stadium rather than crowd the transit plaza."},
-                {"action": "Deploy 10 volunteers to manage plaza queues", "why": "To communicate delay updates, distribute water, and prevent queue jumping."},
-                {"action": "Adjust transit plaza dynamic banners", "why": "To show real-time delay minutes and alternative bus routes."}
+                {"action": "Notify transportation team to dispatch standby buses",
+                    "why": "To provide immediate alternative transit capacity and drain queue build-up."},
+                {"action": "Extend stadium food/concession operations by 20 minutes",
+                    "why": "To encourage fans to stay inside the stadium rather than crowd the transit plaza."},
+                {"action": "Deploy 10 volunteers to manage plaza queues",
+                    "why": "To communicate delay updates, distribute water, and prevent queue jumping."},
+                {"action": "Adjust transit plaza dynamic banners",
+                    "why": "To show real-time delay minutes and alternative bus routes."}
             ],
             "timeline": [
                 "T-0m: Metro rail signaling fault reported to command bridge.",
@@ -263,7 +287,7 @@ def get_simulated_mission_plan(situation: str) -> dict:
                 "T+22m: Train lines restored; station queue clearing completed."
             ]
         }
-        
+
     # 6. Parking Lot A is full
     elif "parking" in query or "lot" in query or "car" in query:
         return {
@@ -279,10 +303,14 @@ def get_simulated_mission_plan(situation: str) -> dict:
             "predicted_resolution_time": "20 minutes",
             "confidence_score": 95.0,
             "recommendations": [
-                {"action": "Redirect traffic to Parking Lot B/C", "why": "To immediately relieve the access road tailbacks and utilize empty bays."},
-                {"action": "Deploy 4 traffic control volunteers to Lot A entrance", "why": "To turn cars away and point drivers towards Lot B signage."},
-                {"action": "Update digital highway display signs", "why": "To show 'LOT A FULL - FOLLOW LOT B DETOUR' warning to inbound drivers."},
-                {"action": "Direct handicap placards to Lot B reserved bays", "why": "To maintain accessible parking availability for disabled drivers."}
+                {"action": "Redirect traffic to Parking Lot B/C",
+                    "why": "To immediately relieve the access road tailbacks and utilize empty bays."},
+                {"action": "Deploy 4 traffic control volunteers to Lot A entrance",
+                    "why": "To turn cars away and point drivers towards Lot B signage."},
+                {"action": "Update digital highway display signs",
+                    "why": "To show 'LOT A FULL - FOLLOW LOT B DETOUR' warning to inbound drivers."},
+                {"action": "Direct handicap placards to Lot B reserved bays",
+                    "why": "To maintain accessible parking availability for disabled drivers."}
             ],
             "timeline": [
                 "T-0m: Parking sensors indicate 100% capacity in Lot A.",
@@ -291,7 +319,7 @@ def get_simulated_mission_plan(situation: str) -> dict:
                 "T+18m: Traffic flow on access roads normalized; Lot B filling steadily."
             ]
         }
-        
+
     # 7. Fire alarm
     elif "fire" in query or "alarm" in query or "smoke" in query:
         return {
@@ -307,10 +335,14 @@ def get_simulated_mission_plan(situation: str) -> dict:
             "predicted_resolution_time": "8 minutes",
             "confidence_score": 99.8,
             "recommendations": [
-                {"action": "Initiate local evacuation for Section 102 & Concourse North", "why": "To clear spectators out of the immediate smoke zone safely and rapidly."},
-                {"action": "Deploy 12 safety volunteers to Gate B exits", "why": "To direct the evacuation flow, prevent crush hazards, and ensure exits remain clear."},
-                {"action": "Override Elevator 1 for manual wheelchair evacuation", "why": "To ensure disabled fans in the upper levels are safely evacuated without using stairs."},
-                {"action": "Dispatch on-site fire response crew", "why": "To assist in kitchen grease fire suppression and secure chemical gas valves."}
+                {"action": "Initiate local evacuation for Section 102 & Concourse North",
+                    "why": "To clear spectators out of the immediate smoke zone safely and rapidly."},
+                {"action": "Deploy 12 safety volunteers to Gate B exits",
+                    "why": "To direct the evacuation flow, prevent crush hazards, and ensure exits remain clear."},
+                {"action": "Override Elevator 1 for manual wheelchair evacuation",
+                    "why": "To ensure disabled fans in the upper levels are safely evacuated without using stairs."},
+                {"action": "Dispatch on-site fire response crew",
+                    "why": "To assist in kitchen grease fire suppression and secure chemical gas valves."}
             ],
             "timeline": [
                 "T-0m: Alarm triggered; automated fire suppressors active.",
@@ -319,7 +351,7 @@ def get_simulated_mission_plan(situation: str) -> dict:
                 "T+6m: Fire suppressed; smoke cleared; sector declared 100% safe."
             ]
         }
-        
+
     # Default fallback
     else:
         return {
@@ -335,7 +367,8 @@ def get_simulated_mission_plan(situation: str) -> dict:
             "predicted_resolution_time": "15 minutes",
             "confidence_score": 85.0,
             "recommendations": [
-                {"action": "Notify local sector volunteers", "why": "To inspect the reported zone and verify details on the ground."},
+                {"action": "Notify local sector volunteers",
+                    "why": "To inspect the reported zone and verify details on the ground."},
                 {"action": "Monitor surveillance cameras", "why": "To get visual verification of the situation status."}
             ],
             "timeline": [

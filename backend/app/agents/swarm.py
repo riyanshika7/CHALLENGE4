@@ -29,10 +29,11 @@ You must return a unified, structured JSON playbook:
 Do not include markdown code block characters like ```json, return ONLY the raw JSON text.
 """
 
+
 def coordinate_swarm_genai(event_description: str) -> dict:
     """Invokes Gemini model to simulate the collaborative multi-agent swarm."""
     client = genai.Client(api_key=GEMINI_API_KEY)
-    
+
     prompt = f"""
     Analyze and coordinate response playbooks for this complex stadium event:
     Event: '{event_description}'
@@ -43,9 +44,9 @@ def coordinate_swarm_genai(event_description: str) -> dict:
     - Access Router: Maintain step-free routes, bypass blocked areas.
     - Predictive Ops: Route around bottlenecks, move volunteers.
     """
-    
+
     response = client.models.generate_content(
-        model='gemini-1.5-flash',
+        model='gemini-2.0-flash',
         contents=prompt,
         config=types.GenerateContentConfig(
             system_instruction=SWARM_LEADER_INSTRUCTION,
@@ -53,9 +54,10 @@ def coordinate_swarm_genai(event_description: str) -> dict:
             temperature=0.3
         )
     )
-    
+
     result = json.loads(response.text.strip())
     return result
+
 
 def coordinate_swarm_simulator(event_description: str) -> dict:
     """Local fallback simulator for the Multi-Agent Swarm Orchestrator."""
@@ -224,6 +226,7 @@ def coordinate_swarm_simulator(event_description: str) -> dict:
         "ops_playbook": "Predictive Ops: Crowd densities within normal range. Volunteers maintained at standard positions. No redeployments needed.",
     }
 
+
 def handle_swarm_coordination(event_description: str) -> dict:
     """Core entrypoint for the Multi-Agent Swarm with simulator fallback and strict Generative AI structured explanation fields."""
     raw = {}
@@ -239,10 +242,10 @@ def handle_swarm_coordination(event_description: str) -> dict:
 
     # Enrich with the mandatory PromptWars Generative AI structured steps
     desc_lower = (event_description or "").lower()
-    
+
     # 1. Observation
     raw["observation"] = f"Swarm sensors and volunteer reports registered event: '{event_description}'."
-    
+
     # 2. Analysis
     if "emergency" in desc_lower or "heart" in desc_lower or "choking" in desc_lower or "suffocating" in desc_lower:
         raw["analysis"] = "Severe medical distress or health safety hazard identified in local stadium sector. Potential cardiac or respiratory incident requiring immediate escalation."

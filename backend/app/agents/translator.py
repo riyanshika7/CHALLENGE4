@@ -42,12 +42,13 @@ You must output valid JSON matching this schema:
 Do not include markdown formatting or ```json wrapper, return ONLY the raw JSON text.
 """
 
+
 def translate_query_genai(query: str) -> dict:
     """Invokes Gemini to analyze, translate, and generate volunteer instructions."""
     try:
         client = genai.Client(api_key=GEMINI_API_KEY)
         response = client.models.generate_content(
-            model='gemini-1.5-flash',
+            model='gemini-2.0-flash',
             contents=f"Analyze and process this fan query: '{query}'",
             config=types.GenerateContentConfig(
                 system_instruction=SYSTEM_INSTRUCTION,
@@ -110,10 +111,11 @@ def translate_query_genai(query: str) -> dict:
 
     return result
 
+
 def _translate_query_simulator_raw(query: str) -> dict:
     """Rule-based local fallback translator supporting intent, tone, and contextual responses across 9+ languages."""
     query_lower = query.lower()
-    
+
     # 1. Thai Detection (\u0e00-\u0e7f)
     if re.search(r"[\u0e00-\u0e7f]", query):
         if any(w in query_lower for w in ["ห้องน้ำ", "สุขา", "toilet", "restroom"]):
@@ -360,25 +362,26 @@ def _translate_query_simulator_raw(query: str) -> dict:
                 "suggested_reply_english": "Please maintain calm. Medical staff is arriving.",
                 "volunteer_instructions": "Comfort them and report a medical emergency."
             }
-        
+
     # Default fallback (English or unsupported/unrecognized language)
     is_emergency = any(w in query_lower for w in ["emergency", "hurt", "dying", "fainted", "doctor", "security"])
     is_frustrated = any(w in query_lower for w in ["angry", "lost", "stole", "ticket", "wait", "late"])
-    
+
     detected_lang = "English (or Unknown)"
-    intent = "medical_emergency" if is_emergency else ("ticketing_issue" if "ticket" in query_lower else "general_inquiry")
+    intent = "medical_emergency" if is_emergency else (
+        "ticketing_issue" if "ticket" in query_lower else "general_inquiry")
     tone = "panicked" if is_emergency else ("angry" if is_frustrated else "calm")
-    
+
     reply_native = "I am looking into this right now. Please give me one moment to assist you."
     instructions = "Listen carefully to the fan's query and cross-reference with stadium logs."
-    
+
     if is_emergency:
         reply_native = "Please stay calm. I am contacting stadium medical services immediately."
         instructions = "Fan is panicked. Reassure them, keep them seated, and report a MEDICAL incident immediately."
     elif is_frustrated:
         reply_native = "I apologize for the delay. Let me check the registry to resolve your issue."
         instructions = "Fan is frustrated. Listen actively, do not interrupt, and keep a calm tone of voice."
-        
+
     return {
         "detected_language": detected_lang,
         "intent": intent,
@@ -389,20 +392,21 @@ def _translate_query_simulator_raw(query: str) -> dict:
         "volunteer_instructions": instructions
     }
 
+
 def translate_query_simulator(query: str) -> dict:
     """Enriched wrapper around the rule-based local simulator to support nested XAI and frontend properties."""
     raw = _translate_query_simulator_raw(query)
-    
+
     intent_detection = {
         "detected_language": raw.get("detected_language", "English"),
         "intent": raw.get("intent", "general_inquiry"),
         "tone": raw.get("tone", "calm"),
         "translated_query": raw.get("translated_query", query)
     }
-    
+
     suggested_reply_native = raw.get("suggested_reply_native", "")
     suggested_reply_english = raw.get("suggested_reply_english", "")
-    
+
     # Differentiate the urgency based on detected tone/intent:
     if intent_detection["tone"] == "panicked" or intent_detection["intent"] == "medical_emergency":
         volunteer_instructions = "Medical Emergency: Alert Venue Staff immediately and direct to Medical Tent"
@@ -452,12 +456,12 @@ def translate_query_simulator(query: str) -> dict:
         "reasoning_engine": xai_reasoning,
         "plain_english_reasoning": xai_reasoning,
         "plain_english_action": volunteer_instructions,
-        
+
         # Strict 3-field output formatting (XAI prompt alignment)
         "intent_and_context": intent_and_context,
         "xai_reasoning": xai_reasoning,
         "actionable_script": suggested_reply_native,
-        
+
         # Test compatibility
         "intent_detection": intent_detection,
         "reasoning": xai_reasoning,
@@ -470,6 +474,7 @@ def translate_query_simulator(query: str) -> dict:
         "expected_impact": expected_impact_text,
         "confidence_score": confidence_score
     }
+
 
 def handle_translation(query: str) -> dict:
     """Core entrypoint that manages GenAI processing with a seamless local fallback and strict 3-field JSON XAI output formatting."""
@@ -491,8 +496,10 @@ def handle_translation(query: str) -> dict:
         intent = ic.get("intent_category", raw.get("intent", "general_inquiry"))
         tone = ic.get("tone", raw.get("tone", "calm"))
         translated_query = ic.get("translated_query", raw.get("translated_query", query))
-        suggested_reply_native = ic.get("suggested_reply_native", raw.get("suggested_reply_native", "I am assisting you now."))
-        suggested_reply_english = ic.get("suggested_reply_english", raw.get("suggested_reply_english", "I am assisting you now."))
+        suggested_reply_native = ic.get("suggested_reply_native", raw.get(
+            "suggested_reply_native", "I am assisting you now."))
+        suggested_reply_english = ic.get("suggested_reply_english", raw.get(
+            "suggested_reply_english", "I am assisting you now."))
     else:
         detected_language = raw.get("detected_language", "English")
         intent = raw.get("intent", "general_inquiry")
@@ -524,7 +531,7 @@ def handle_translation(query: str) -> dict:
         "suggested_reply_native": suggested_reply_native,
         "suggested_reply_english": suggested_reply_english
     }
-    
+
     # Differentiate casual request vs. medical emergency in plain English XAI reasoning
     if intent == "medical_emergency":
         xai_reasoning = f"The fan is experiencing a severe medical emergency (heart/choking/fainting). Recommending immediate volunteer escalation to medical staff and seating the fan to prevent injury."
@@ -563,12 +570,12 @@ def handle_translation(query: str) -> dict:
         "reasoning_engine": xai_reasoning,
         "plain_english_reasoning": xai_reasoning,
         "plain_english_action": volunteer_instructions,
-        
+
         # Strict 3-field output formatting (XAI prompt alignment)
         "intent_and_context": intent_and_context,
         "xai_reasoning": xai_reasoning,
         "actionable_script": actionable_script,
-        
+
         # Test compatibility
         "intent_detection": intent_detection,
         "reasoning": xai_reasoning,

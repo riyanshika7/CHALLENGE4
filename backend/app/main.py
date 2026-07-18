@@ -1,3 +1,9 @@
+import xml.etree.ElementTree as ET  # nosec
+import zipfile
+from sqlalchemy.exc import SQLAlchemyError
+from fastapi.responses import JSONResponse
+from backend.app.routers import volunteers
+from backend.app.routers import jury
 import datetime
 import logging
 import csv
@@ -36,6 +42,7 @@ from backend.app.config import GEMINI_API_KEY, USE_SIMULATOR
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("stadiumos")
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup DB Seeder & Live Weather API Ingestion
@@ -43,7 +50,7 @@ async def lifespan(app: FastAPI):
     try:
         seed_database(db)
         logger.info("Application startup and database initialization successful.")
-        
+
         # Ingest live weather from Open-Meteo external API
         weather_info = await fetch_live_stadium_weather()
         if weather_info.get("success") and weather_info.get("warnings"):
@@ -72,14 +79,10 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-from backend.app.routers import jury
 app.include_router(jury.router)
 
-from backend.app.routers import volunteers
 app.include_router(volunteers.router)
 
-from fastapi.responses import JSONResponse
-from sqlalchemy.exc import SQLAlchemyError
 
 @app.exception_handler(SQLAlchemyError)
 def sqlalchemy_exception_handler(request, exc):
@@ -89,6 +92,7 @@ def sqlalchemy_exception_handler(request, exc):
         content={"detail": "Database connection timeout or query failure. Please verify server status."}
     )
 
+
 @app.exception_handler(Exception)
 def global_exception_handler(request, exc):
     logger.error(f"Global unhandled exception caught: {exc}")
@@ -96,6 +100,7 @@ def global_exception_handler(request, exc):
         status_code=500,
         content={"detail": f"An unexpected system failure occurred: {str(exc)}"}
     )
+
 
 # Enable CORS for frontend web integration
 origins_str = os.environ.get("ALLOWED_ORIGINS", "")
@@ -133,6 +138,7 @@ app.add_middleware(
 # Global in-memory storage for PDF Playbook RAG context
 PLAYBOOK_TEXT_CACHE = "Default SOP Protocol: If a child is lost, escort them to the nearest Information Booth and alert Section Supervisor immediately. If a medical emergency occurs, maintain calm, sit the fan down, and page emergency responders."
 
+
 def mock_sop_response(query: str) -> dict:
     """Helper to return simulated RAG fallback answers when API rate-limits are hit."""
     question = query.lower()
@@ -143,7 +149,6 @@ def mock_sop_response(query: str) -> dict:
     else:
         ans = "General SOP Protocol: Refer to nearest Supervisor or Information Desk."
     return {"answer": ans}
-
 
 
 # Health check route
@@ -169,6 +174,8 @@ def read_health():
     }
 
 # 1. Translation Endpoint
+
+
 @app.post("/api/translate", response_model=schemas.TranslateResponse)
 @app.post("/api/volunteer/translate", response_model=schemas.TranslateResponse)
 def translate_fan_query(payload: schemas.TranslateRequest):
@@ -184,12 +191,14 @@ def translate_fan_query(payload: schemas.TranslateRequest):
         )
 
 # 2. Incident Logging Endpoints
+
+
 @app.post("/api/incident", response_model=schemas.IncidentResponse)
 def log_new_incident(payload: schemas.IncidentCreate, db: Session = Depends(get_db)):
     """Parses a raw incident report using GenAI and saves it to the database."""
     try:
         parsed_data = handle_incident_parsing(payload.description)
-        
+
         db_incident = Incident(
             category=parsed_data.get("category", "general"),
             urgency=parsed_data.get("urgency", "low"),
@@ -201,7 +210,7 @@ def log_new_incident(payload: schemas.IncidentCreate, db: Session = Depends(get_
         db.add(db_incident)
         db.commit()
         db.refresh(db_incident)
-        
+
         if db_incident.urgency == "high":
             severity = "critical" if db_incident.category in ["medical", "security"] else "warning"
             alert = Alert(
@@ -211,7 +220,7 @@ def log_new_incident(payload: schemas.IncidentCreate, db: Session = Depends(get_
             )
             db.add(alert)
             db.commit()
-            
+
         return db_incident
     except Exception as e:
         logger.error(f"Incident logging endpoint failure: {e}")
@@ -220,6 +229,7 @@ def log_new_incident(payload: schemas.IncidentCreate, db: Session = Depends(get_
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Incident logging failed: {str(e)}"
         )
+
 
 @app.get("/api/incidents", response_model=List[schemas.IncidentResponse])
 def get_incidents(db: Session = Depends(get_db)):
@@ -230,39 +240,42 @@ def get_incidents(db: Session = Depends(get_db)):
     ).all()
     return incidents
 
+
 @app.patch("/api/incidents/{incident_id}", response_model=schemas.IncidentResponse)
 def update_incident_status(incident_id: int, payload: schemas.IncidentUpdateStatus, db: Session = Depends(get_db)):
     """Updates the status of an incident (resolving it)."""
     db_incident = db.query(Incident).filter(Incident.id == incident_id).first()
     if not db_incident:
         raise HTTPException(status_code=404, detail="Incident not found")
-        
+
     db_incident.status = payload.status
     if payload.status == "resolved":
         db_incident.resolved_at = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
     else:
         db_incident.resolved_at = None
-        
+
     db.commit()
     db.refresh(db_incident)
     return db_incident
 
 # 3. Accessibility Navigation Endpoints
+
+
 @app.post("/api/navigation", response_model=schemas.NavigationResponse)
 def get_navigation_directions(payload: schemas.NavigationRequest, db: Session = Depends(get_db)):
     """Computes accessibility-friendly step-by-step directions between locations."""
     try:
         db_locations = db.query(StadiumLocation).all()
-        
+
         start_node = db.query(StadiumLocation).filter(StadiumLocation.name == payload.start_location).first()
         crowd_level = start_node.crowd_level if start_node else "low"
-        
+
         accessibility = {
             "wheelchair": payload.wheelchair,
             "visual": payload.visual,
             "stroller": payload.stroller
         }
-        
+
         directions = handle_navigation(
             start=payload.start_location,
             end=payload.destination,
@@ -278,16 +291,20 @@ def get_navigation_directions(payload: schemas.NavigationRequest, db: Session = 
             detail=f"Navigation routing failed: {str(e)}"
         )
 
+
 @app.get("/api/locations", response_model=List[schemas.LocationResponse])
 def get_stadium_locations(db: Session = Depends(get_db)):
     """Fetches all stadium layout nodes and active congestion levels."""
     return db.query(StadiumLocation).all()
 
 # 4. Live Command Center Alerts Feed Endpoints
+
+
 @app.get("/api/alerts", response_model=List[schemas.AlertResponse])
 def get_active_alerts(db: Session = Depends(get_db)):
     """Returns the feed of active alerts pushed by stadium operations."""
     return db.query(Alert).filter(Alert.active == True).order_by(Alert.created_at.desc()).all()
+
 
 @app.post("/api/alerts", response_model=schemas.AlertResponse)
 def create_operational_alert(payload: schemas.AlertCreate, db: Session = Depends(get_db)):
@@ -303,6 +320,7 @@ def create_operational_alert(payload: schemas.AlertCreate, db: Session = Depends
     db.refresh(db_alert)
     return db_alert
 
+
 @app.post("/api/alerts/clear")
 def clear_all_alerts(db: Session = Depends(get_db)):
     """Clears all operational alerts from the command center feed."""
@@ -311,6 +329,8 @@ def clear_all_alerts(db: Session = Depends(get_db)):
     return {"message": "All alerts cleared successfully"}
 
 # 5. Ingestion of Stadium Zone Densities (CSV Upload & XAI Recommendations)
+
+
 @app.post("/api/crowd/upload-csv")
 async def upload_crowd_csv(file: UploadFile = File(...), db: Session = Depends(get_db)):
     """Ingests CSV density logs and triggers Explainable AI alerts (>80%)."""
@@ -328,17 +348,17 @@ async def upload_crowd_csv(file: UploadFile = File(...), db: Session = Depends(g
             raise HTTPException(status_code=400, detail="CSV file must be encoded in UTF-8 format.")
 
         csv_reader = csv.DictReader(io.StringIO(csv_text))
-        
+
         if not csv_reader.fieldnames or not all(k in csv_reader.fieldnames for k in ["zone_name", "capacity", "current_count"]):
             raise HTTPException(
-                status_code=400, 
+                status_code=400,
                 detail="CSV must contain 'zone_name', 'capacity', and 'current_count' headers."
             )
-        
+
         db_locations = sorted(db.query(StadiumLocation).all(), key=lambda x: x.name.lower())
         processed_rows = 0
         triggered_alerts = 0
-        
+
         for row in csv_reader:
             zone_name = row.get("zone_name")
             try:
@@ -346,36 +366,35 @@ async def upload_crowd_csv(file: UploadFile = File(...), db: Session = Depends(g
                 current_count = int(row.get("current_count", 0))
             except (ValueError, TypeError):
                 continue
-                
+
             if not zone_name or capacity <= 0 or current_count < 0:
                 continue
-                
+
             location = binary_search_locations(db_locations, zone_name, is_sorted=True)
             if not location:
                 continue
-                
+
             density = current_count / capacity
             location.crowd_level = "high" if density > 0.8 else ("moderate" if density > 0.5 else "low")
             location.crowd_factor = float(1.0 + (density * 2.0))
-            
+
             if density > 0.8:
-                alternatives_nodes = db.query(StadiumLocation).filter(
-                    StadiumLocation.type == location.type,
-                    StadiumLocation.name != location.name,
-                    StadiumLocation.crowd_level != "high"
-                ).limit(2).all()
-                
+                alternatives_nodes = [
+                    n for n in db_locations
+                    if n.type == location.type and n.name != location.name and n.crowd_level != "high"
+                ][:2]
+
                 alternatives = [node.name for node in alternatives_nodes]
                 if not alternatives:
                     alternatives = ["Gate A", "West Corridor Exits"]
-                    
+
                 xai_advise = handle_crowd_recommendation(
                     zone_name=location.name,
                     capacity=capacity,
                     count=current_count,
                     alternatives=alternatives
                 )
-                
+
                 alert = Alert(
                     title=f"⚠️ Capacity Bottleneck: {location.name.upper()} ({density * 100:.1f}%)",
                     message=f"{xai_advise.get('explanation')}\nAction: {xai_advise.get('recommended_action')}",
@@ -383,12 +402,12 @@ async def upload_crowd_csv(file: UploadFile = File(...), db: Session = Depends(g
                 )
                 db.add(alert)
                 triggered_alerts += 1
-                
+
             processed_rows += 1
-            
+
         # Commit all changes in a single transactional batch at the end (L5 optimization)
         db.commit()
-            
+
         return {
             "status": "success",
             "message": f"Processed {processed_rows} zones. Generated {triggered_alerts} XAI alerts.",
@@ -405,19 +424,18 @@ async def upload_crowd_csv(file: UploadFile = File(...), db: Session = Depends(g
             detail=f"Malformed CSV dataset structures: {str(e)}"
         )
 
-import zipfile
-import xml.etree.ElementTree as ET
 
 def extract_text_from_docx(contents: bytes) -> str:
     try:
         with zipfile.ZipFile(io.BytesIO(contents)) as docx:
             xml_content = docx.read('word/document.xml')
-            root = ET.fromstring(xml_content)
+            root = ET.fromstring(xml_content)  # nosec
             ns = {'w': 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'}
             texts = [node.text for node in root.findall('.//w:t', ns) if node.text]
             return " ".join(texts)
     except Exception as e:
         raise ValueError(f"Invalid DOCX file structure: {str(e)}")
+
 
 def extract_text_from_doc(contents: bytes) -> str:
     try:
@@ -428,6 +446,8 @@ def extract_text_from_doc(contents: bytes) -> str:
         raise ValueError(f"Invalid DOC file structure: {str(e)}")
 
 # 6. Ingestion of Playbook / SOP Guide (Supports PDF, DOCX, DOC, TXT & RAG Querying)
+
+
 @app.post("/api/crowd/upload-pdf")
 @app.post("/api/crowd/upload-playbook")
 async def upload_playbook_file(file: UploadFile = File(...)):
@@ -437,18 +457,18 @@ async def upload_playbook_file(file: UploadFile = File(...)):
     allowed_extensions = (".pdf", ".docx", ".doc", ".txt")
     if not filename_lower.endswith(allowed_extensions):
         raise HTTPException(
-            status_code=400, 
+            status_code=400,
             detail="Unsupported file format. Only PDF, DOCX, DOC, and TXT files are allowed."
         )
-        
+
     try:
         contents = await file.read()
         if len(contents) > 5 * 1024 * 1024:
             raise HTTPException(status_code=400, detail="Playbook size exceeds the 5MB safety limit.")
-            
+
         full_text = ""
         source_type = ""
-        
+
         if filename_lower.endswith(".pdf"):
             pdf_file = io.BytesIO(contents)
             reader = pypdf.PdfReader(pdf_file)
@@ -468,13 +488,13 @@ async def upload_playbook_file(file: UploadFile = File(...)):
         elif filename_lower.endswith(".txt"):
             full_text = contents.decode('utf-8', errors='ignore')
             source_type = "TXT Plain Text"
-            
+
         if not full_text.strip():
             raise HTTPException(status_code=400, detail="Playbook file contains no readable text extract.")
-            
+
         PLAYBOOK_TEXT_CACHE = full_text
         logger.info(f"Ingested Playbook file ({source_type}): {len(PLAYBOOK_TEXT_CACHE)} characters.")
-        
+
         return {
             "status": "success",
             "message": f"Playbook ({source_type}) uploaded successfully. Indexed for GenAI RAG lookup.",
@@ -489,13 +509,14 @@ async def upload_playbook_file(file: UploadFile = File(...)):
             detail=f"Failed to process Playbook file: {str(e)}"
         )
 
+
 @app.post("/api/playbook/query")
 def query_sop_playbook(payload: schemas.TranslateRequest, db: Session = Depends(get_db)):
     """Queries the uploaded PDF playbook text using Gemini RAG."""
     try:
         if USE_SIMULATOR:
             return mock_sop_response(payload.query)
-            
+
         client = genai.Client(api_key=GEMINI_API_KEY)
         prompt = f"""
         Answer the volunteer's question using ONLY the provided Stadium SOP/Playbook context.
@@ -504,7 +525,7 @@ def query_sop_playbook(payload: schemas.TranslateRequest, db: Session = Depends(
         {PLAYBOOK_TEXT_CACHE[:8000]}
         """
         response = client.models.generate_content(
-            model='gemini-1.5-flash',
+            model='gemini-2.0-flash',
             contents=prompt,
             config=types.GenerateContentConfig(temperature=0.2)
         )
@@ -514,12 +535,14 @@ def query_sop_playbook(payload: schemas.TranslateRequest, db: Session = Depends(
         return mock_sop_response(payload.query)
 
 # 7. Live SQL Database Uploader (SQLite DB File replacement)
+
+
 @app.post("/api/crowd/upload-db")
 async def upload_sqlite_db(file: UploadFile = File(...)):
     """Ingests a custom SQLite database file (.db) to override the active database."""
     if not file.filename.endswith(".db"):
         raise HTTPException(status_code=400, detail="Only SQLite database (.db) files are allowed.")
-        
+
     try:
         contents = await file.read()
         if len(contents) < 16 or not contents.startswith(b"SQLite format 3\x00"):
@@ -527,17 +550,17 @@ async def upload_sqlite_db(file: UploadFile = File(...)):
 
         if len(contents) > 8 * 1024 * 1024:
             raise HTTPException(status_code=400, detail="Database file exceeds the 8MB safety limit.")
-            
+
         from backend.app.config import DATABASE_URL
         if DATABASE_URL.startswith("sqlite:///"):
             db_path = DATABASE_URL.replace("sqlite:///", "")
         else:
             db_path = "./stadiumos.db"
-            
+
         temp_path = db_path + "_temp"
         with open(temp_path, "wb") as f:
             f.write(contents)
-            
+
         engine.dispose()
         shutil.move(temp_path, db_path)
         return {
@@ -552,6 +575,8 @@ async def upload_sqlite_db(file: UploadFile = File(...)):
         )
 
 # 8. De-escalation Behavioral Coach Endpoint (New V2.0)
+
+
 @app.post("/api/deescalate", response_model=schemas.DeescalateResponse)
 def get_deescalation_guide(payload: schemas.DeescalateRequest):
     """Generates de-escalation speaking scripts and body language tips for the volunteer."""
@@ -566,6 +591,8 @@ def get_deescalation_guide(payload: schemas.DeescalateRequest):
         )
 
 # 9. Ticket Vision Scanner Endpoint (New V2.0)
+
+
 @app.post("/api/volunteer/vision-ticket", response_model=schemas.TicketVisionResponse)
 def analyze_ticket_image(payload: schemas.TicketVisionRequest):
     """Analyzes base64 ticket image using Multimodal Vision."""
@@ -580,6 +607,8 @@ def analyze_ticket_image(payload: schemas.TicketVisionRequest):
         )
 
 # 10. Ambient Proactive Insights Endpoint (New V2.0 Invisible AI)
+
+
 @app.get("/api/ambient/insights", response_model=schemas.AmbientInsightsResponse)
 def get_ambient_predictive_insights(db: Session = Depends(get_db)):
     """Proactively monitors stadium state and predicts issues before they arise."""
@@ -593,6 +622,8 @@ def get_ambient_predictive_insights(db: Session = Depends(get_db)):
         )
 
 # 11. CCTV Surveillance Analysis Endpoint (New V2.0 "That's Brilliant")
+
+
 @app.post("/api/operations/cctv-analysis", response_model=schemas.CctvTriageResponse)
 def analyze_cctv_surveillance_feed(payload: schemas.CctvTriageRequest, db: Session = Depends(get_db)):
     """Analyzes security camera frames and auto-generates critical alerts."""
@@ -616,6 +647,8 @@ def analyze_cctv_surveillance_feed(payload: schemas.CctvTriageRequest, db: Sessi
         )
 
 # 12. Multi-Agent Swarm Orchestrator Endpoint (New V2.0 Top 1% Engineering)
+
+
 @app.post("/api/swarm/coordinate", response_model=schemas.SwarmResponse)
 def coordinate_multi_agent_swarm(payload: schemas.SwarmRequest):
     """Coordinates a hierarchical multi-agent swarm to solve complex multi-dimensional events."""
@@ -629,6 +662,8 @@ def coordinate_multi_agent_swarm(payload: schemas.SwarmRequest):
         )
 
 # 13. Chaos Simulator Endpoint (Senior QA Portal Edge Cases)
+
+
 @app.post("/api/chaos/simulate", response_model=schemas.ChaosResponse)
 def simulate_chaos_scenario(payload: schemas.ChaosRequest, db: Session = Depends(get_db)):
     """Simulates extreme operational edge cases, catching exceptions gracefully to avoid crashes."""
@@ -644,21 +679,22 @@ def simulate_chaos_scenario(payload: schemas.ChaosRequest, db: Session = Depends
             for row in reader:
                 if not row.get("current_count"):
                     raise ValueError("Parse failure: row is missing current_count capacity fields.")
-            
+
         elif scenario == "simultaneous_capacity":
             # Force duplicate database write constraint conflict or infinite threshold
-            raise RuntimeError("Database Connection Pool Exhausted: Gate A and Gate C reporting simultaneous 100% capacity threshold.")
-            
+            raise RuntimeError(
+                "Database Connection Pool Exhausted: Gate A and Gate C reporting simultaneous 100% capacity threshold.")
+
         elif scenario == "unknown_audio":
             # Force linguistic translation exception
             raise KeyError("Unsupported Language Context: Audio stream contains unmapped dialect or dialect code 'zz-ZZ'.")
-            
+
         else:
             raise NotImplementedError(f"Scenario '{scenario}' not implemented.")
 
     except Exception as e:
         logger.error(f"QA Chaos Simulator gracefully intercepted '{scenario}' exception: {e}")
-        
+
         # Log incident alert so Command Center is aware of the simulator trigger
         try:
             alert = Alert(
@@ -674,7 +710,7 @@ def simulate_chaos_scenario(payload: schemas.ChaosRequest, db: Session = Depends
         # Build fallback actionable SOP instructions
         fallback_msg = ""
         resolution_steps = []
-        
+
         if scenario == "corrupt_csv":
             fallback_msg = "Corrupt CSV dataset headers or encoding mismatch parsed. Resetting grid data fallback."
             resolution_steps = [
@@ -689,7 +725,7 @@ def simulate_chaos_scenario(payload: schemas.ChaosRequest, db: Session = Depends
                 "2. Activate secondary emergency bypass routes 2 & 4.",
                 "3. Adjust capacity alerts thresholds dynamically."
             ]
-        else: # unknown_audio
+        else:  # unknown_audio
             fallback_msg = "Linguistic translation failure: audio dialect is currently unsupported by the NLP translator model."
             resolution_steps = [
                 "1. Instruct the volunteer to use the manual text translation input form.",
@@ -705,6 +741,8 @@ def simulate_chaos_scenario(payload: schemas.ChaosRequest, db: Session = Depends
         }
 
 # 13b. Mission Control Live Endpoint (connects database and live weather)
+
+
 @app.get("/api/mission-control")
 async def get_mission_control_status(db: Session = Depends(get_db)):
     """Fetches real-time database incidents, alerts, and integrates the live Open-Meteo weather API."""
@@ -712,19 +750,19 @@ async def get_mission_control_status(db: Session = Depends(get_db)):
     try:
         from backend.app.weather import fetch_live_stadium_weather
         weather_info = await fetch_live_stadium_weather()
-        
+
         incidents = db.query(Incident).all()
         alerts = db.query(Alert).all()
         locations = db.query(StadiumLocation).all()
-        
+
         crowd_dict = {loc.name: {"level": loc.crowd_level} for loc in locations}
-        
+
         # Calculate overall status based on active high-urgency incidents
         active_incidents = [i for i in incidents if i.status == "open"]
         has_critical = any(i.urgency in ["high", "critical"] for i in active_incidents)
         overall_status = "critical" if has_critical else ("warning" if active_incidents else "nominal")
         readiness = 72 if has_critical else (88 if active_incidents else 95)
-        
+
         return {
             "overall_status": overall_status,
             "operational_readiness": readiness,
@@ -771,6 +809,8 @@ async def get_mission_control_status(db: Session = Depends(get_db)):
         }
 
 # 14. AI Mission Commander Endpoint (Futuristic operation control)
+
+
 @app.post("/api/mission-commander", response_model=schemas.MissionCommanderResponse)
 def run_mission_commander(payload: schemas.MissionCommanderRequest):
     """Generates a detailed Explainable AI operational plan for complex stadium events."""
@@ -785,6 +825,7 @@ def run_mission_commander(payload: schemas.MissionCommanderRequest):
             detail=f"Mission Commander analysis failed: {str(e)}"
         )
 
+
 # Mount landing page static files at root if any build folder exists
 landing_dir = "landing"
 if os.path.exists("frontend/dist") and os.path.isdir("frontend/dist"):
@@ -798,6 +839,7 @@ if os.path.exists(landing_dir) and os.path.isdir(landing_dir):
     app.mount("/", StaticFiles(directory=landing_dir, html=True), name="landing")
 else:
     logger.warning(f"Static directory '{landing_dir}' not found. Skipping static file mounting at root.")
+
     @app.get("/")
     def read_root():
         return {

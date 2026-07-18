@@ -34,18 +34,19 @@ Guidelines:
 - Return ONLY raw JSON text.
 """
 
+
 def coach_deescalation_genai(query: str, tone: str, context: str) -> dict:
     """Invokes Gemini to generate real-time de-escalation guidance."""
     client = genai.Client(api_key=GEMINI_API_KEY)
-    
+
     prompt = f"""
     Fan Query: {query}
     Tone: {tone}
     Context: {context}
     """
-    
+
     response = client.models.generate_content(
-        model='gemini-1.5-flash',
+        model='gemini-2.0-flash',
         contents=prompt,
         config=types.GenerateContentConfig(
             system_instruction=SYSTEM_INSTRUCTION,
@@ -53,9 +54,10 @@ def coach_deescalation_genai(query: str, tone: str, context: str) -> dict:
             temperature=0.3
         )
     )
-    
+
     result = json.loads(response.text.strip())
     return result
+
 
 def coach_deescalation_simulator(query: str, tone: str, context: str) -> dict:
     """Local fallback simulator for de-escalation coaching."""
@@ -78,12 +80,13 @@ def coach_deescalation_simulator(query: str, tone: str, context: str) -> dict:
         "tactical_step": step
     }
 
+
 def handle_deescalation(query: str, tone: str, context: str) -> dict:
     """Core entrypoint for de-escalation coach agent with simulator fallback."""
     if USE_SIMULATOR:
         logger.info("Using Local De-escalation Coach Simulator (No API Key)")
         return coach_deescalation_simulator(query, tone, context)
-        
+
     try:
         return coach_deescalation_genai(query, tone, context)
     except Exception as e:

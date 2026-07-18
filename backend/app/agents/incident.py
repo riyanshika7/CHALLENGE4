@@ -28,12 +28,13 @@ You MUST return a JSON object matching this schema:
 }
 """
 
+
 def parse_incident_genai(raw_text: str) -> dict:
     """Invokes Gemini to parse and structure the raw incident text."""
     client = genai.Client(api_key=GEMINI_API_KEY)
-    
+
     response = client.models.generate_content(
-        model='gemini-1.5-flash',
+        model='gemini-2.0-flash',
         contents=f"Extract and structure this incident report: '{raw_text}'",
         config=types.GenerateContentConfig(
             system_instruction=SYSTEM_INSTRUCTION,
@@ -41,43 +42,44 @@ def parse_incident_genai(raw_text: str) -> dict:
             temperature=0.1
         )
     )
-    
+
     result = json.loads(response.text.strip())
     return result
+
 
 def parse_incident_simulator(raw_text: str) -> dict:
     """Rule-based local fallback parser for offline testing or missing API keys."""
     text_lower = raw_text.lower()
-    
+
     category = "general"
     urgency = "low"
     location = "unknown"
     action = "Assess situation and contact section supervisor."
-    
+
     # Simple location extractor
     for word in ["gate a", "gate b", "gate c", "gate d", "section 101", "section 102", "section 204", "restroom block a", "concession stand north"]:
         if word in text_lower:
             location = word.title()
             break
-            
+
     # Medical classification
     if any(w in text_lower for w in ["faint", "heart", "breathe", "chest", "collapse", "hurt", "injured", "pain", "medical", "bleeding"]):
         category = "medical"
         urgency = "high"
         action = "Dispatch emergency medical team with stretcher."
-    
+
     # Security classification
     elif any(w in text_lower for w in ["fight", "steal", "theft", "weapon", "assault", "threat", "harass", "security"]):
         category = "security"
         urgency = "high"
         action = "Alert stadium security dispatch and supervisors."
-        
+
     # Hazard classification
     elif any(w in text_lower for w in ["spill", "wet", "slippery", "leak", "broken", "seat", "wire", "hazard", "trash"]):
         category = "hazard"
         urgency = "medium" if "broken" in text_lower or "leak" in text_lower else "low"
         action = "Notify cleaning crew and facilities team to inspect."
-        
+
     # Lost & Found classification
     elif any(w in text_lower for w in ["lost", "found", "wallet", "phone", "bag", "backpack", "keys", "camera"]):
         category = "lost_found"
@@ -92,12 +94,13 @@ def parse_incident_simulator(raw_text: str) -> dict:
         "required_action": action
     }
 
+
 def handle_incident_parsing(raw_text: str) -> dict:
     """Core entrypoint for incident parsing with simulator fallback."""
     if USE_SIMULATOR:
         logger.info("Using Local Incident Parser (No API Key)")
         return parse_incident_simulator(raw_text)
-        
+
     try:
         return parse_incident_genai(raw_text)
     except Exception as e:

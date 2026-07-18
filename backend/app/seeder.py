@@ -3,16 +3,17 @@ from sqlalchemy.orm import Session
 from backend.app.db import engine, Base
 from backend.app.models import StadiumLocation, Alert, Incident
 
+
 def seed_database(db: Session):
     # Create all tables if they don't exist
     Base.metadata.create_all(bind=engine)
-    
+
     # Check if we already have locations seeded
     if db.query(StadiumLocation).count() > 0:
         return
-        
+
     print("Pre-seeding database tables...")
-    
+
     # 1. Seed Stadium Locations
     locations = [
         StadiumLocation(
@@ -96,9 +97,9 @@ def seed_database(db: Session):
             description="Food and drink stand. Braille menus available."
         )
     ]
-    
+
     db.add_all(locations)
-    
+
     # 2. Seed Mock Alerts
     alerts = [
         Alert(
@@ -121,7 +122,7 @@ def seed_database(db: Session):
         )
     ]
     db.add_all(alerts)
-    
+
     # 3. Seed Historical Incidents
     def utc_now():
         return datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
@@ -158,6 +159,6 @@ def seed_database(db: Session):
         )
     ]
     db.add_all(incidents)
-    
+
     db.commit()
     print("Database seeding completed successfully.")

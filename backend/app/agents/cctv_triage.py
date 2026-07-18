@@ -29,18 +29,19 @@ You MUST return a JSON object matching this schema:
 Do not include markdown code block characters like ```json, return ONLY the raw JSON text.
 """
 
+
 def analyze_cctv_genai(image_b64: str) -> dict:
     """Invokes Gemini Multimodal Vision API to parse CCTV security frames."""
     client = genai.Client(api_key=GEMINI_API_KEY)
-    
+
     # Clean base64 header if present
     if "," in image_b64:
         image_b64 = image_b64.split(",")[1]
-        
+
     image_data = base64.b64decode(image_b64)
-    
+
     response = client.models.generate_content(
-        model='gemini-1.5-flash',
+        model='gemini-2.0-flash',
         contents=[
             types.Part.from_bytes(
                 data=image_data,
@@ -54,9 +55,10 @@ def analyze_cctv_genai(image_b64: str) -> dict:
             temperature=0.1
         )
     )
-    
+
     result = json.loads(response.text.strip())
     return result
+
 
 def analyze_cctv_simulator(scenario: str) -> dict:
     """Local fallback simulator for CCTV surveillance analysis."""
@@ -82,12 +84,13 @@ def analyze_cctv_simulator(scenario: str) -> dict:
             "automated_dispatch_action": "No immediate dispatch required. Maintain standard perimeter patrol."
         }
 
+
 def handle_cctv_analysis(image_b64: str, scenario: str = "normal") -> dict:
     """Core entrypoint for CCTV crowd surveillance with simulator fallback."""
     if USE_SIMULATOR or not image_b64:
         logger.info(f"Using Local CCTV Vision Simulator for scenario: {scenario}")
         return analyze_cctv_simulator(scenario)
-        
+
     try:
         return analyze_cctv_genai(image_b64)
     except Exception as e:

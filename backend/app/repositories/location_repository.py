@@ -3,6 +3,7 @@ from typing import List, Tuple, Optional
 from sqlalchemy.orm import Session
 from backend.app.models import StadiumLocation
 
+
 class SortedLocationIndex:
     def __init__(self):
         # Pairs of (lowercase_name, location_id)
@@ -36,6 +37,7 @@ class SortedLocationIndex:
             results.append(self._pairs[idx][1])
             idx += 1
         return results
+
 
 class LocationRepository:
     def __init__(self, db: Session):

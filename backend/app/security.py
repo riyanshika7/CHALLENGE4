@@ -30,7 +30,8 @@ PROMPT_INJECTION_PATTERNS = (
 _PROMPT_INJECTION_RE = re.compile("|".join(PROMPT_INJECTION_PATTERNS), re.IGNORECASE | re.DOTALL)
 _UNSAFE_HTML_RE = re.compile(r"<\s*(script|iframe|object|embed)|on\w+\s*=|javascript:\s*", re.IGNORECASE)
 _FORMULA_PREFIX_RE = re.compile(r"^\s*[=+\-@]")
-_FORBIDDEN_SQL_RE = re.compile(r"\b(attach|detach|pragma|vacuum|load_extension|drop|alter|create|delete|update)\b", re.IGNORECASE)
+_FORBIDDEN_SQL_RE = re.compile(
+    r"\b(attach|detach|pragma|vacuum|load_extension|drop|alter|create|delete|update)\b", re.IGNORECASE)
 _MAX_JSON_NESTING = 12
 
 
@@ -164,5 +165,6 @@ def validate_jury_upload(filename: str | None, contents: bytes) -> dict:
         else:
             item_count = _validate_sql(contents)
     except (UnicodeDecodeError, json.JSONDecodeError, csv.Error, ValueError) as exc:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Unsafe or malformed upload: {exc}") from exc
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail=f"Unsafe or malformed upload: {exc}") from exc
     return {"filename": basename, "suffix": suffix, "item_count": item_count}

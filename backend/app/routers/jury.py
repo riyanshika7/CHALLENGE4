@@ -5,6 +5,7 @@ from backend.app.security import validate_jury_upload, prevalidate_upload_size, 
 
 router = APIRouter(prefix="/api/jury", tags=["Jury Evaluation"])
 
+
 @router.post("/evaluate")
 async def evaluate_submission(
     request: Request,
