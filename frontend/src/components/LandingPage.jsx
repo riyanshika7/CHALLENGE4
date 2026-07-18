@@ -174,6 +174,26 @@ export default function LandingPage({ onEnterConsole }) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [bootDone]);
 
+  // 5. Intersection Observer for smooth-section-reveal
+  useEffect(() => {
+    if (!bootDone) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    const revealElements = document.querySelectorAll('.smooth-section-reveal');
+    revealElements.forEach(el => observer.observe(el));
+
+    return () => {
+      revealElements.forEach(el => observer.unobserve(el));
+    };
+  }, [bootDone]);
+
   const scrollToSection = (id) => {
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });

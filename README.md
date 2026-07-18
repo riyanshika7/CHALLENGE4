@@ -396,7 +396,7 @@ stadiumos/
 │   │   └── components/         # 35 components
 │   ├── package.json
 │   └── vite.config.js
-├── screenshots/                # 8 product screenshots
+├── screenshots/                # 10 product screenshots
 ├── run.py                      # Unified startup launcher
 ├── docker-compose.yml
 ├── cloudrun.yaml
@@ -410,60 +410,74 @@ stadiumos/
 <details>
 <summary><strong>View Screenshots</strong></summary>
 
-### Landing Page
-Cinematic 3D landing with Lenis scroll and stadium model.
+### 1. Neural Swarm Boot Sequence
+Futuristic terminal boot sequence initializing the local SQLite replica and speech mediators.
 
 <p align="center">
-  <img src="screenshots/stadiumos_landing.png" alt="Landing Page" width="90%">
+  <img src="screenshots/stadiumos_boot.png" alt="Neural Swarm Boot Sequence" width="90%">
 </p>
 
-### Digital Twin Cockpit
-Interactive 3D stadium with live telemetry.
+### 2. Cinematic Scroll Landing Page
+Apple-style storytelling page with sticky transparent navigation and live statistics.
 
 <p align="center">
-  <img src="screenshots/stadiumos_twin.png" alt="Digital Twin" width="90%">
+  <img src="screenshots/stadiumos_landing.png" alt="Cinematic Scroll Landing Page" width="90%">
 </p>
 
-### What-If Simulator
-Crowd congestion prediction with adjustable parameters.
+### 3. Live AI Mission Commander
+Interactive command console generating tactical checklists for stadium events in real time.
 
 <p align="center">
-  <img src="screenshots/stadiumos_simulator.png" alt="What-If Simulator" width="90%">
+  <img src="screenshots/stadiumos_mission_commander_landing.png" alt="Live AI Mission Commander" width="90%">
 </p>
 
-### Swarm Orchestrator
-Multi-agent AI coordination console.
+### 4. About & WCAG Grid
+High-gloss glassmorphic overview outlining missions, volunteer personas, and WCAG AA compliance.
 
 <p align="center">
-  <img src="screenshots/swarm_orchestrator.png" alt="Swarm Orchestrator" width="90%">
+  <img src="screenshots/stadiumos_about.png" alt="About & WCAG Grid" width="90%">
 </p>
 
-### Ticket Scanner
-Multimodal vision ticket validation.
+### 5. Interactive Volunteer Cockpit Dashboard
+Complete operations dashboard with live CCTV triage feeds, incidents log, and step-free Dijkstra maps.
 
 <p align="center">
-  <img src="screenshots/ticket_scanner.png" alt="Ticket Scanner" width="90%">
+  <img src="screenshots/stadiumos_cockpit.png" alt="Interactive Volunteer Cockpit Dashboard" width="90%">
 </p>
 
-### Multilingual Co-Pilot
-8-language translation with de-escalation.
+### 6. Dynamic 3D Digital Twin Cockpit
+Interactive 3D stadium digital twin with real-time zone layer toggles (crowd heatmap, volunteer beacons, incidents, and evacuations).
 
 <p align="center">
-  <img src="screenshots/multilingual_copilot.png" alt="Multilingual Co-Pilot" width="90%">
+  <img src="screenshots/stadiumos_twin_cockpit.png" alt="Dynamic 3D Digital Twin Cockpit" width="90%">
 </p>
 
-### CCTV & Incident Management
-AI-powered surveillance with auto-dispatch.
+### 7. Multilingual Co-Pilot
+Spoken query intent detector and translation de-escalation playbook supporting 8 languages.
 
 <p align="center">
-  <img src="screenshots/cctv_and_incidents.png" alt="CCTV & Incidents" width="90%">
+  <img src="screenshots/stadiumos_mediator_copilot.png" alt="Multilingual Co-Pilot" width="90%">
 </p>
 
-### Ambient Insights
-Predictive bottleneck forecasting.
+### 8. Ticket Vision Gate Scanner
+Multimodal ticket scanner validation screen highlighting ticket mismatch warning playbooks.
 
 <p align="center">
-  <img src="screenshots/ambient_insights.png" alt="Ambient Insights" width="90%">
+  <img src="screenshots/stadiumos_ticket_scanner.png" alt="Ticket Vision Gate Scanner" width="90%">
+</p>
+
+### 9. AI "What-If" Concourse Congestion Simulator
+Interactive parameter slider dashboard forecasting potential gate congestion risk levels under high-attendance and bad weather.
+
+<p align="center">
+  <img src="screenshots/stadiumos_whatif_simulator.png" alt="AI What-If Congestion Simulator" width="90%">
+</p>
+
+### 10. Live Mission Control Dashboard
+Central dashboard overview displaying active alerts, turnstile gate logs, real-time Open-Meteo weather coordinates, and active volunteer deployments.
+
+<p align="center">
+  <img src="screenshots/stadiumos_mission_control.png" alt="Live Mission Control Dashboard" width="90%">
 </p>
 
 </details>
