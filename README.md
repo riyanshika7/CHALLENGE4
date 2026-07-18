@@ -20,7 +20,7 @@
 
 <p align="center">
   <a href="https://github.com/riyanshika7/CHALLENGE4"><strong>GitHub Repository</strong></a> |
-  <a href="https://stadiumos-demo.onrender.com"><strong>Live Demo Link</strong></a>
+  <a href="https://challenge4-fr.onrender.com/"><strong>Live Demo Link</strong></a>
 </p>
 
 ---
