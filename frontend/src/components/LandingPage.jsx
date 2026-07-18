@@ -420,42 +420,35 @@ export default function LandingPage({ onEnterConsole }) {
           <button 
             type="button"
             className="landing-nav-link" 
-            onClick={() => setActiveDropdown(activeDropdown === 'features' ? null : 'features')}
-            style={{ color: activeDropdown === 'features' ? '#46F3FF' : '' }}
+            onClick={() => scrollToSection('features-section')}
           >
             Features
           </button>
           <button 
             type="button"
             className="landing-nav-link" 
-            onClick={() => setActiveDropdown(activeDropdown === 'twin' ? null : 'twin')}
-            style={{ color: activeDropdown === 'twin' ? '#46F3FF' : '' }}
+            onClick={() => scrollToSection('technology-section')}
           >
             Technology
           </button>
           <button 
             type="button"
             className="landing-nav-link" 
-            onClick={() => setActiveDropdown(activeDropdown === 'swarm' ? null : 'swarm')}
-            style={{ color: activeDropdown === 'swarm' ? '#46F3FF' : '' }}
+            onClick={() => scrollToSection('architecture-section')}
           >
             Architecture
           </button>
           <button 
             type="button"
             className="landing-nav-link" 
-            onClick={() => {
-              setActiveDropdown(null);
-              scrollToSection('sandbox-console');
-            }}
+            onClick={() => scrollToSection('sandbox-console')}
           >
             Demo
           </button>
           <button 
             type="button"
             className="landing-nav-link" 
-            onClick={() => setActiveDropdown(activeDropdown === 'about' ? null : 'about')}
-            style={{ color: activeDropdown === 'about' ? '#46F3FF' : '' }}
+            onClick={() => scrollToSection('about-section')}
           >
             About
           </button>
@@ -472,408 +465,6 @@ export default function LandingPage({ onEnterConsole }) {
           </button>
         </div>
       </nav>
-
-      {/* 🚀 Futuristic Interactive Dropdown Panels */}
-      <AnimatePresence>
-        {activeDropdown && (
-          <motion.div 
-            id={activeDropdown === 'swarm' ? 'swarm-dropdown-panel' : activeDropdown === 'twin' ? 'twin-dropdown-panel' : 'ops-dropdown-panel'}
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="landing-dropdown-panel sandbox-card-glass morph-card-glow"
-            style={{
-              position: 'fixed',
-              top: '90px',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              width: '92%',
-              maxWidth: '920px',
-              background: 'rgba(5, 8, 22, 0.95)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-              border: '1px solid rgba(70, 243, 255, 0.3)',
-              boxShadow: '0 25px 60px rgba(0,0,0,0.85), 0 0 30px rgba(70, 243, 255, 0.08)',
-              borderRadius: '16px',
-              zIndex: 9999,
-              padding: '1.75rem',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '1.25rem',
-              color: '#ffffff'
-            }}
-          >
-            {/* Header row with Title and Close button */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(70, 243, 255, 0.15)', paddingBottom: '0.75rem' }}>
-              <div>
-                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, letterSpacing: '0.05em', color: '#46F3FF', margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  {activeDropdown === 'features' && "🌟 STADIUMOS PLATFORM KEY FEATURES"}
-                  {activeDropdown === 'swarm' && "🛰️ AI AGENT SWARM DEPLOYMENT CONTROL"}
-                  {activeDropdown === 'twin' && "📡 3D DIGITAL TWIN REAL-TIME CONTROLS"}
-                  {activeDropdown === 'ops' && "⚙️ OPERATIONAL CORE SUBSYSTEM DIAGNOSTICS"}
-                  {activeDropdown === 'about' && "ℹ️ ABOUT THE STADIUMOS PLATFORM"}
-                </h3>
-                <span style={{ fontSize: '0.72rem', color: '#88a4b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                  {activeDropdown === 'features' && "Overview // Next-gen features registry"}
-                  {activeDropdown === 'swarm' && "Status: Active Sync // 4 Agent sub-nodes running"}
-                  {activeDropdown === 'twin' && `Status: Connected // Simulated Occupancy: ${stadiumOccupancy}%`}
-                  {activeDropdown === 'ops' && "Status: Diagnostic standby // Systems normal"}
-                  {activeDropdown === 'about' && "Metadata // PromptWars submission details"}
-                </span>
-              </div>
-              <button 
-                onClick={() => setActiveDropdown(null)}
-                style={{
-                  background: 'rgba(255,255,255,0.05)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  borderRadius: '6px',
-                  color: '#88a4b8',
-                  padding: '0.25rem 0.6rem',
-                  fontSize: '0.75rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s'
-                }}
-                onMouseOver={(e) => e.currentTarget.style.color = '#fff'}
-                onMouseOut={(e) => e.currentTarget.style.color = '#88a4b8'}
-              >
-                ✕ Close
-              </button>
-            </div>
-
-            {/* Content: Features View */}
-            {activeDropdown === 'features' && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.1rem' }}>
-                  {[
-                    { title: '🤖 Hierarchical Agent Swarm', desc: '4 autonomous sub-agents coordinating speech de-escalation, safety triage, wheelchair routing, and predictive operations.', icon: '⚡' },
-                    { title: '📊 3D Live Digital Twin', desc: '100vh interactive stadium twin with neon boundary circles, dynamic weather sweeps, and real-time live metrics.', icon: '📡' },
-                    { title: '🧏 Deaf Accessibility Mode', desc: 'Speech-to-text transcriptions with scalable contrast-zooming and step-free wheelchair navigation filters.', icon: '🧏' },
-                    { title: '🛡️ Jury Testing Sandbox', desc: 'Secure evaluation portal accepting raw CSV/Docx/PDF uploads to safely execute stress tests.', icon: '📁' }
-                  ].map(feat => (
-                    <div 
-                      key={feat.title}
-                      style={{
-                        background: 'rgba(255,255,255,0.02)',
-                        border: '1px solid rgba(70, 243, 255, 0.15)',
-                        borderRadius: '10px',
-                        padding: '1.25rem',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '0.5rem',
-                        textAlign: 'left'
-                      }}
-                    >
-                      <strong style={{ fontSize: '0.9rem', color: '#46F3FF', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                        <span>{feat.icon}</span> {feat.title}
-                      </strong>
-                      <p style={{ fontSize: '0.78rem', color: '#cbd5e1', lineHeight: '1.45', margin: 0 }}>{feat.desc}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Content: Swarm View */}
-            {activeDropdown === 'swarm' && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
-                  {[
-                    { name: 'Linguistic Mediator', role: 'Context & Speech Translation', status: 'ACTIVE', color: '#10b981', ping: agentPings.mediator },
-                    { name: 'Safety Triage', role: 'Incident Risk Evaluator', status: 'STANDBY', color: '#f59e0b', ping: agentPings.triage },
-                    { name: 'Access Router', role: 'Weather-Aware Pathfinding', status: 'ACTIVE', color: '#10b981', ping: agentPings.router },
-                    { name: 'Predictive Ops', role: 'Ambient Concourse Predictor', status: 'MONITORING', color: '#46F3FF', ping: agentPings.ops }
-                  ].map(agent => (
-                    <div 
-                      key={agent.name}
-                      style={{
-                        background: 'rgba(255,255,255,0.02)',
-                        border: '1px solid rgba(255,255,255,0.05)',
-                        borderRadius: '10px',
-                        padding: '1rem',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '0.4rem'
-                      }}
-                    >
-                      <strong style={{ fontSize: '0.85rem', color: '#fff' }}>{agent.name}</strong>
-                      <span style={{ fontSize: '0.72rem', color: '#88a4b8' }}>{agent.role}</span>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem', borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: '0.4rem' }}>
-                        <span style={{ fontSize: '0.65rem', color: agent.color, fontWeight: 900, letterSpacing: '0.05em' }}>● {agent.status}</span>
-                        <span style={{ fontSize: '0.68rem', color: '#64748b' }}>Ping: {agent.ping}ms</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Swarm Actions Bar */}
-                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', borderTop: '1px solid rgba(70,243,255,0.1)', paddingTop: '1rem' }}>
-                  <button 
-                    onClick={handlePingSwarm}
-                    className="btn-secondary-neon"
-                    style={{ padding: '0.5rem 1rem', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
-                  >
-                    <Zap size={14} /> Ping Swarm Node
-                  </button>
-                  <button 
-                    onClick={handleOptimizeSwarm}
-                    className="btn-primary-neon"
-                    style={{ padding: '0.5rem 1rem', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
-                    disabled={isSwarmOptimizing}
-                  >
-                    {isSwarmOptimizing ? "Optimizing..." : swarmOptimized ? "✓ Optimized" : "⚙️ Optimize Allocation"}
-                  </button>
-                  <button 
-                    onClick={() => setShowLogs(prev => !prev)}
-                    className="btn-secondary-neon"
-                    style={{ padding: '0.5rem 1rem', fontSize: '0.8rem' }}
-                  >
-                    {showLogs ? "📂 Hide Terminal" : "📁 View Logs Terminal"}
-                  </button>
-                  {swarmPing && (
-                    <span style={{ marginLeft: 'auto', alignSelf: 'center', fontSize: '0.75rem', color: '#10b981', fontWeight: 'bold' }}>
-                      Radar Ping Result: {swarmPing}ms (Nominal)
-                    </span>
-                  )}
-                </div>
-
-                {/* Swarm Terminal Console */}
-                {showLogs && (
-                  <div 
-                    style={{
-                      background: '#000000',
-                      border: '1px solid rgba(70, 243, 255, 0.2)',
-                      borderRadius: '8px',
-                      padding: '1rem',
-                      fontFamily: 'Consolas, monospace',
-                      fontSize: '0.75rem',
-                      color: '#00ffcc',
-                      maxHeight: '120px',
-                      overflowY: 'auto',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '0.3rem',
-                      textAlign: 'left'
-                    }}
-                  >
-                    {logs.map((log, i) => <div key={i}>&gt; {log}</div>)}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Content: Digital Twin View */}
-            {activeDropdown === 'twin' && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', alignItems: 'center' }}>
-                  {/* Left Column: Preset simulations */}
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    <strong style={{ fontSize: '0.85rem', color: '#46F3FF', textTransform: 'uppercase' }}>Select Active Twin Scenario:</strong>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                      <button 
-                        className={`btn-sandbox-option ${activeScenario === 'normal' ? 'active' : ''}`}
-                        onClick={() => setActiveScenario('normal')}
-                        style={{ padding: '0.6rem 1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8rem' }}
-                      >
-                        <span>🟢 Normal Operations (0% risk)</span>
-                      </button>
-                      <button 
-                        className={`btn-sandbox-option ${activeScenario === 'congestion' ? 'active' : ''}`}
-                        onClick={() => setActiveScenario('congestion')}
-                        style={{ padding: '0.6rem 1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8rem' }}
-                      >
-                        <span>🟡 Gate C Crowd Congestion Surge</span>
-                      </button>
-                      <button 
-                        className={`btn-sandbox-option ${activeScenario === 'emergency' ? 'active' : ''}`}
-                        onClick={() => setActiveScenario('emergency')}
-                        style={{ padding: '0.6rem 1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8rem' }}
-                      >
-                        <span>🔴 Emergency Medical Route Bypass</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Right Column: Layer toggles & Occupancy Slider */}
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                    <div>
-                      <strong style={{ fontSize: '0.85rem', color: '#46F3FF', textTransform: 'uppercase', display: 'block', marginBottom: '0.5rem' }}>
-                        Overlay Layers:
-                      </strong>
-                      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                        <button 
-                          onClick={() => setSensorsHUD(prev => !prev)}
-                          style={{
-                            padding: '0.4rem 0.8rem',
-                            fontSize: '0.72rem',
-                            borderRadius: '6px',
-                            cursor: 'pointer',
-                            background: sensorsHUD ? 'rgba(70, 243, 255, 0.12)' : 'rgba(255,255,255,0.03)',
-                            color: sensorsHUD ? '#46F3FF' : '#88a4b8',
-                            border: sensorsHUD ? '1px solid #46F3FF' : '1px solid rgba(255,255,255,0.1)',
-                          }}
-                        >
-                          📡 HUD {sensorsHUD ? "ON" : "OFF"}
-                        </button>
-                        <button 
-                          onClick={() => setDronesActive(prev => !prev)}
-                          style={{
-                            padding: '0.4rem 0.8rem',
-                            fontSize: '0.72rem',
-                            borderRadius: '6px',
-                            cursor: 'pointer',
-                            background: dronesActive ? 'rgba(70, 243, 255, 0.12)' : 'rgba(255,255,255,0.03)',
-                            color: dronesActive ? '#46F3FF' : '#88a4b8',
-                            border: dronesActive ? '1px solid #46F3FF' : '1px solid rgba(255,255,255,0.1)',
-                          }}
-                        >
-                          🛸 Drones {dronesActive ? "ON" : "OFF"}
-                        </button>
-                        <button 
-                          onClick={() => setHeatmapActive(prev => !prev)}
-                          style={{
-                            padding: '0.4rem 0.8rem',
-                            fontSize: '0.72rem',
-                            borderRadius: '6px',
-                            cursor: 'pointer',
-                            background: heatmapActive ? 'rgba(70, 243, 255, 0.12)' : 'rgba(255,255,255,0.03)',
-                            color: heatmapActive ? '#46F3FF' : '#88a4b8',
-                            border: heatmapActive ? '1px solid #46F3FF' : '1px solid rgba(255,255,255,0.1)',
-                          }}
-                        >
-                          🌡️ Heatmap {heatmapActive ? "ON" : "OFF"}
-                        </button>
-                      </div>
-                    </div>
-
-                    <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '0.75rem' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '0.4rem' }}>
-                        <span>Simulated Fan Density:</span>
-                        <strong style={{ color: '#46F3FF' }}>{stadiumOccupancy}% ({Math.floor(stadiumOccupancy * 825)} fans)</strong>
-                      </div>
-                      <input 
-                        type="range" 
-                        min="10" 
-                        max="100" 
-                        value={stadiumOccupancy} 
-                        onChange={(e) => setStadiumOccupancy(Number(e.target.value))} 
-                        style={{
-                          width: '100%',
-                          accentColor: '#46F3FF',
-                          background: 'rgba(255,255,255,0.1)',
-                          height: '5px',
-                          borderRadius: '3px',
-                          cursor: 'pointer'
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Content: Operational Modules Diagnostics */}
-            {activeDropdown === 'ops' && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem' }}>
-                  {/* Subsystems List */}
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: '10px', padding: '1rem' }}>
-                    <strong style={{ fontSize: '0.85rem', color: '#fff', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '0.4rem', marginBottom: '0.2rem' }}>Subsystems Integrity:</strong>
-                    {[
-                      { name: "Multilingual Speech-to-Text Recognition", status: "NOMINAL", icon: "🗣️" },
-                      { name: "Weather-aware Dijkstra Engine", status: "NOMINAL", icon: "📍" },
-                      { name: "SQLite Offline Edge Ledger", status: "READY", icon: "📁" },
-                      { name: "CCTV Predictive Video Triage", status: "ACTIVE", icon: "🚨" }
-                    ].map(sub => (
-                      <div key={sub.name} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem' }}>
-                        <span>{sub.icon} {sub.name}</span>
-                        <strong style={{ color: '#10b981', fontSize: '0.7rem' }}>{sub.status}</strong>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Diagnostic Action Block */}
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                    <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                      <button 
-                        onClick={handleRunDiagnostic}
-                        className="btn-primary-neon"
-                        style={{ padding: '0.5rem 1rem', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
-                      >
-                        🔧 Run Self-Diagnostic
-                      </button>
-                      <button 
-                        onClick={handleFlushCache}
-                        className="btn-secondary-neon"
-                        style={{ padding: '0.5rem 1rem', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
-                        disabled={isSyncingCache}
-                      >
-                        {isSyncingCache ? "Syncing..." : "🔄 Flush Edge Cache"}
-                      </button>
-                    </div>
-
-                    {/* Progress Bar */}
-                    {diagnosticProgress !== null && (
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem' }}>
-                          <span>Diagnostic Progress:</span>
-                          <strong>{diagnosticProgress}%</strong>
-                        </div>
-                        <div style={{ height: '4px', background: 'rgba(255,255,255,0.05)', borderRadius: '2px', overflow: 'hidden' }}>
-                          <div style={{ width: `${diagnosticProgress}%`, height: '100%', background: 'linear-gradient(90deg, #46F3FF, #7C5CFF)', transition: 'width 0.2s' }} />
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Diagnostic Logs console */}
-                    {diagnosticLogs.length > 0 && (
-                      <div 
-                        style={{
-                          background: '#000000',
-                          border: '1px solid rgba(70, 243, 255, 0.2)',
-                          borderRadius: '8px',
-                          padding: '0.75rem',
-                          fontFamily: 'Consolas, monospace',
-                          fontSize: '0.72rem',
-                          color: '#00ffcc',
-                          minHeight: '80px',
-                          maxHeight: '100px',
-                          overflowY: 'auto',
-                          textAlign: 'left'
-                        }}
-                      >
-                        {diagnosticLogs.map((dLog, idx) => <div key={idx}>&gt; {dLog}</div>)}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
-            {/* Content: About View */}
-            {activeDropdown === 'about' && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', textAlign: 'left', lineHeight: '1.5' }}>
-                <p style={{ fontSize: '0.88rem', color: '#e2e8f0', margin: 0 }}>
-                  <strong>StadiumOS</strong> is a next-generation AI-powered venue command system designed to ensure safety and accessibility at scale during the FIFA World Cup 2026.
-                </p>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.25rem', marginTop: '0.5rem' }}>
-                  <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '1rem' }}>
-                    <h4 style={{ fontSize: '0.82rem', color: '#7C5CFF', margin: '0 0 0.4rem 0' }}>🎯 Goal</h4>
-                    <p style={{ fontSize: '0.72rem', color: '#94a3b8', margin: 0 }}>Optimal resource allocations and automated de-escalation for stadium volunteers.</p>
-                  </div>
-                  <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '1rem' }}>
-                    <h4 style={{ fontSize: '0.82rem', color: '#7C5CFF', margin: '0 0 0.4rem 0' }}>♿ Inclusion</h4>
-                    <p style={{ fontSize: '0.72rem', color: '#94a3b8', margin: 0 }}>Step-free pathfinding and captioning systems meeting strict WCAG criteria.</p>
-                  </div>
-                  <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '1rem' }}>
-                    <h4 style={{ fontSize: '0.82rem', color: '#7C5CFF', margin: '0 0 0.4rem 0' }}>🛡️ Security</h4>
-                    <p style={{ fontSize: '0.72rem', color: '#94a3b8', margin: 0 }}>Full-spectrum input sanitization, environment keys safety, and robust sanitization.</p>
-                  </div>
-                </div>
-              </div>
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* Cinematic Hero Content Section */}
       <div id="hero-anchor" className="hero-wrapper">
@@ -939,7 +530,7 @@ export default function LandingPage({ onEnterConsole }) {
       <StatsBanner />
 
       {/* Cinematic Scroll Content Section */}
-      <section id="digital-twin-details" className="transformation-section smooth-section-reveal">
+      <section id="technology-section" className="transformation-section smooth-section-reveal">
         <div className="transformation-grid">
           <div className="transformation-content">
             <span className="trans-tag">Ambient Orchestrator</span>
@@ -974,6 +565,79 @@ export default function LandingPage({ onEnterConsole }) {
       </section>
 
       <FeaturesSection />
+
+      {/* 🏛️ Architecture Section */}
+      <section id="architecture-section" className="transformation-section smooth-section-reveal" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.05)', paddingTop: '4rem', paddingBottom: '4rem' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem' }}>
+          <span className="trans-tag">System Design</span>
+          <h2 className="text-4xl font-extrabold font-header mt-2 mb-4">Hierarchical Swarm Architecture</h2>
+          <p className="text-slate-400 max-w-2xl mb-8">
+            StadiumOS runs on a strictly decoupled clean architecture layout implementing the SOLID design principles. A master coordinator delegates tasks to a network of specialized autonomous sub-agents:
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.25rem' }}>
+            {[
+              { name: 'Linguistic Mediator', role: 'De-escalation & Spoken Translation', desc: 'Auto-detects spoken language, translates messages under 500ms, and generates psycho-social calming scripts.', icon: '🗣️' },
+              { name: 'Safety Triage', role: 'CCTV Video & Risk Assessment', desc: 'Monitors real-time crowd dynamics, counts local density thresholds, and highlights slip-and-fall hazards.', icon: '🚨' },
+              { name: 'Access Router', role: 'Weather-Aware Pathfinding', desc: 'Runs Dijkstra path calculations to bypass active wet zones, congested plazas, or security blockages.', icon: '📍' },
+              { name: 'Predictive Ops', role: 'Ambient Concourse Predictor', desc: 'Continuously updates SQLite ledger statistics and queries Open-Meteo APIs to populate volunteer metrics.', icon: '⚙️' }
+            ].map(agent => (
+              <div 
+                key={agent.name}
+                style={{
+                  background: 'rgba(5, 8, 22, 0.5)',
+                  border: '1px solid rgba(70, 243, 255, 0.12)',
+                  borderRadius: '12px',
+                  padding: '1.5rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.5rem',
+                  textAlign: 'left'
+                }}
+              >
+                <strong style={{ fontSize: '1rem', color: '#46F3FF', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <span>{agent.icon}</span> {agent.name}
+                </strong>
+                <span style={{ fontSize: '0.72rem', color: '#88a4b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{agent.role}</span>
+                <p style={{ fontSize: '0.8rem', color: '#cbd5e1', lineHeight: '1.45', margin: '0.5rem 0 0 0' }}>{agent.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ℹ️ About Section */}
+      <section id="about-section" className="transformation-section smooth-section-reveal" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.05)', paddingTop: '4rem', paddingBottom: '4rem', background: 'rgba(2, 4, 10, 0.4)' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2.5rem', alignItems: 'center' }}>
+          <div>
+            <span className="trans-tag">FIFA 2026 PromptWars</span>
+            <h2 className="text-3xl font-extrabold font-header mt-2 mb-4">About StadiumOS</h2>
+            <p className="text-slate-300 leading-relaxed text-sm">
+              StadiumOS is a next-generation AI-powered venue command system designed to ensure safety and accessibility at scale during the FIFA World Cup 2026. Built as an award-winning submission for the Challenge 4 PromptWars final evaluation.
+            </p>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1rem' }}>
+            {[
+              { title: '🎯 Goal & De-escalation', desc: 'Dynamic context detection (intent, tone) to provide real-time scripts and guidelines for concourse volunteers.', color: '#46F3FF' },
+              { title: '♿ WCAG & Inclusivity', desc: 'Supports interactive step-free wheelchair routes and Deaf Mode utilizing speech-to-text transcriptions with scalable text-size modifiers.', color: '#7C5CFF' },
+              { title: '🛡️ Robustness & Security', desc: 'Secure environment variables setup, full sanitization of SQLite entries, and isolated file parsers in the Judges Portal.', color: '#46F3FF' }
+            ].map(item => (
+              <div 
+                key={item.title} 
+                style={{
+                  background: 'rgba(255, 255, 255, 0.02)', 
+                  border: '1px solid rgba(255, 255, 255, 0.05)', 
+                  borderRadius: '10px', 
+                  padding: '1.25rem',
+                  textAlign: 'left'
+                }}
+              >
+                <h4 style={{ fontSize: '0.9rem', color: item.color, margin: '0 0 0.3rem 0', fontWeight: 'bold' }}>{item.title}</h4>
+                <p style={{ fontSize: '0.78rem', color: '#94a3b8', margin: 0, lineHeight: '1.4' }}>{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <footer className="landing-footer">
         <div>© 2026 StadiumOS. Built for the FIFA World Cup 2026 PromptWars.</div>

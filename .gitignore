@@ -54,10 +54,12 @@ env/
 # Temporary / Scratch test scripts
 check_db.py
 scratch_replace_models.py
+scratch_delete_dropdown.py
 test_commander.py
 test_translate.py
 frontend/screenshot_after_login.png
 frontend/test-results/
+frontend/coverage/
 .pytest_cache/
 .coverage
 .coverage.*
