@@ -13,7 +13,7 @@
   <a href="https://deepmind.google/gemini"><img src="https://img.shields.io/badge/Gemini-2.5_Flash-8E75C2?style=flat-square&logo=googlegemini" alt="Gemini 2.5 Flash"></a>
   <a href="https://threejs.org"><img src="https://img.shields.io/badge/Three.js-R3F-000000?style=flat-square&logo=three.js" alt="Three.js"></a>
   <br>
-  <a href="#"><img src="https://img.shields.io/badge/Pytest-90_passing-brightgreen?style=flat-square" alt="Pytest"></a>
+  <a href="#"><img src="https://img.shields.io/badge/Pytest-118_passing-brightgreen?style=flat-square" alt="Pytest"></a>
   <a href="#"><img src="https://img.shields.io/badge/Vitest-27_passing-brightgreen?style=flat-square" alt="Vitest"></a>
   <a href="#"><img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" alt="License"></a>
 </p>
@@ -31,7 +31,7 @@ StadiumOS is a **real-time AI operating system** for stadium operations at the F
 
 **The core insight**: Stadium operations are messy because information is siloed. Crowd data doesn't talk to routing. Weather doesn't talk to medical. Security doesn't talk to accessibility. StadiumOS breaks every silo.
 
-**One intelligent operating system.** Nine specialized AI agents. One unified mission control dashboard. 20 real-time API endpoints. 35 premium UI components. 117 passing tests.
+**One intelligent operating system.** Nine specialized AI agents. One unified mission control dashboard. 21 real-time API endpoints. 35 premium UI components. 118 passing tests.
 
 ---
 
@@ -137,7 +137,7 @@ Interactive 3D stadium visualization built with React Three Fiber:
 
 ### Accessibility Approach (WCAG 2.1 AAA)
 - **Wheelchair Mode**: Implements Dijkstra-based pathfinding that completely prunes stairs from the routing graph, ensuring 100% step-free pathways.
-- **Deaf Fan Mode**: Displays real-time, high-contrast captions for PA announcements and emergency broadcast alerts.
+- **Deaf Fan Mode (Live Audio Assistant)**: Features an interactive live transcription console that converts spoken queries into high-contrast text overlays in real-time. Hard-of-hearing volunteers can toggle layout text sizing (A- / Default / A+) up to 200% zoom without breaking boundaries.
 - **High-Glare Mode**: Instantly switches the UI to an ultra-high-contrast, outdoor-optimized theme with prominent button outlines and increased font-weight for legibility under bright sunlight.
 - **Screen Reader Friendly**: Adheres to strict semantic HTML, uses descriptive ARIA labels, and includes hidden `aria-live="polite"` regions for real-time announcements.
 
@@ -213,6 +213,56 @@ Every endpoint has a **dual execution path**: GenAI (Gemini) when API key is con
 
 ---
 
+## Security Architecture
+
+StadiumOS implements a three-layer defence-in-depth strategy to protect against OWASP Top 10 vulnerabilities, prompt injection, and supply-chain leakage.
+
+<p align="center">
+  <em>🔐 API Key Protection · 🛡️ Input Sanitization · 🧠 Prompt Injection Defence</em>
+</p>
+
+### 1. Secure Credential Handling
+
+| Practice | Implementation |
+|---|---|
+| **Zero hardcoded secrets** | All API keys, DB URLs, and service credentials read exclusively from environment variables via `config.py`. No keys in source code. |
+| **`.gitignore` enforcement** | `backend/.env`, `.env`, and all `.env.*` variants are gitignored. Confirmed untracked by `git ls-files`. |
+| **`.dockerignore` isolation** | Dedicated `.dockerignore` blocks `.env` and credential files from being baked into Docker images — prevents accidental leaks in CI/CD pipelines. |
+| **Runtime validation** | `config.py` logs a startup warning if `GEMINI_API_KEY` is missing or set to the placeholder. |
+| **Cloud-native secrets** | `cloudbuild.yaml` and `cloudrun.yaml` use Google Secret Manager (`--set-secrets` / `secretKeyRef`) instead of env files. |
+
+### 2. File Upload & Injection Prevention (Jury Portal)
+
+The Jury Evaluation Portal (`POST /api/jury/evaluate`) processes untrusted CSV, JSON, PDF, SQLite, and SQL uploads through a multi-layer validation pipeline:
+
+| Layer | Check | Attack Prevented |
+|---|---|---|
+| **Network** | `prevalidate_upload_size()` checks `Content-Length` header before reading body | OOM / disk-exhaustion DoS |
+| **Filesystem** | Path-traversal rejection via `Path(filename).name != filename` | Directory escape |
+| **Extension** | Strict whitelist: `.csv .json .pdf .db .sqlite .sqlite3 .sql` | Masqueraded executables |
+| **Magic bytes** | PDF must start with `%PDF-`, SQLite with `SQLite format 3\x00` | MIME-type spoofing |
+| **Null bytes** | All text-based formats are scanned for `\x00` | Null-injection bypass |
+| **XSS** | Regex strips `<script>`, `<iframe>`, `on*=`, `javascript:` | Cross-site scripting |
+| **Formula injection** | Rejects CSV cells starting with `=`, `+`, `-`, `@` | CSV injection / malware drop |
+| **SQL injection** | Only `INSERT INTO` statements accepted; `DROP/ALTER/DELETE/ATTACH/VACUUM/PRAGMA` blocked | SQL injection |
+| **JSON nesting** | Recursion-depth capped at 12 levels (`_check_nesting()`) | Stack-overflow DoS |
+| **CSV limits** | 20 000-row cap, 4 000-char-per-cell ceiling | Billion-laughs / memory DoS |
+| **Response sanitization** | `sanitize_response_detail()` strips HTML/control chars from error messages | Reflected XSS via API |
+
+### 3. Prompt Injection Defence (Volunteer Co-Pilot)
+
+The multilingual `POST /api/copilot` endpoint processes free-text fan queries directed at the LLM:
+
+| Rail | Implementation |
+|---|---|
+| **Unicode normalisation** | NFKC normalisation strips homoglyph attacks and zero-width characters |
+| **Control-character removal** | Non-printable characters (except `\n`, `\t`) are stripped |
+| **Length ceiling** | 4 000 characters — rejects oversized payloads at the API boundary |
+| **Pattern detection** | 5 compiled regexes scan for prompt-injection attempts: `ignore/override/disregard instructions`, `system prompt`, `<system>/<assistant>` XML tags, `reveal API key / secret`, `DAN / jailbreak / do anything now` |
+| **Defence in depth** | Sanitisation applied both in the API router (`volunteers.py`) and inside the agent function (`handle_copilot_analysis()`) before the query reaches any LLM or string interpolation |
+
+---
+
 ## API Endpoints
 
 ### Volunteer Services
@@ -223,6 +273,7 @@ Every endpoint has a **dual execution path**: GenAI (Gemini) when API key is con
 | POST | `/api/navigation` | Accessibility-aware step-free routing |
 | POST | `/api/deescalate` | Conflict de-escalation coaching scripts |
 | POST | `/api/volunteer/vision-ticket` | Multimodal ticket OCR & validation |
+| POST | `/api/copilot` | Multilingual XAI analysis with prompt-injection guard |
 
 ### Operations
 
@@ -338,9 +389,11 @@ python run.py
 ### Environment Variables
 
 | Variable | Default | Description |
-|---|---|---|
-| `GEMINI_API_KEY` | — | Google Gemini API key (optional; simulators work without it) |
+|---|---|---|---|
+| `GEMINI_API_KEY` | — | Google Gemini API key (optional; simulators work without it). **Never hardcoded.** |
 | `DATABASE_URL` | `sqlite:///./stadiumos.db` | SQLAlchemy connection string |
+| `FIREBASE_CREDENTIALS_PATH` | — | Path to GCP service-account JSON (optional, gitignored) |
+| `FIREBASE_PROJECT_ID` | — | GCP project ID for Firestore sync (optional) |
 | `HOST` | `127.0.0.1` | Backend bind host |
 | `PORT` | `8000` | Backend bind port |
 
@@ -362,14 +415,15 @@ stadiumos/
 │   │   ├── utils.py             # Binary search, sanitization
 │   │   ├── weather.py           # Open-Meteo weather integration
 │   │   ├── gcp.py               # GCP Firestore sync (optional)
+│   │   ├── security.py           # Input sanitization, prompt injection defence, file validation
 │   │   ├── mcp_server.py        # MCP JSON-RPC server
 │   │   ├── routers/
 │   │   │   ├── __init__.py
-│   │   │   ├── operations.py    # 17 operations API endpoints
-│   │   │   └── volunteers.py    # 4 volunteer API endpoints
+│   │   │   ├── jury.py           # Jury Evaluation Portal with file security
+│   │   │   └── volunteers.py     # Volunteer Co-Pilot endpoint
 │   │   └── agents/
 │   │       ├── __init__.py
-│   │       ├── base.py          # StadiumAgent abstract base
+│   │       ├── volunteer_copilot.py  # XAI three-field copilot with input guard
 │   │       ├── translator.py
 │   │       ├── incident.py
 │   │       ├── navigation.py
@@ -396,7 +450,7 @@ stadiumos/
 │   │   └── components/         # 35 components
 │   ├── package.json
 │   └── vite.config.js
-├── screenshots/                # 10 product screenshots
+├── screenshots/                # 11 product screenshots
 ├── run.py                      # Unified startup launcher
 ├── docker-compose.yml
 ├── cloudrun.yaml
@@ -480,6 +534,13 @@ Central dashboard overview displaying active alerts, turnstile gate logs, real-t
   <img src="screenshots/stadiumos_mission_control.png" alt="Live Mission Control Dashboard" width="90%">
 </p>
 
+### 11. Deaf Fan Accessibility Assistant
+Real-time spoken audio transcription HUD featuring adjustable layout text zoom levels up to 200% for hard-of-hearing volunteers.
+
+<p align="center">
+  <img src="screenshots/stadiumos_deaf_mode.png" alt="Deaf Fan Accessibility Assistant" width="90%">
+</p>
+
 </details>
 
 ---
@@ -487,7 +548,7 @@ Central dashboard overview displaying active alerts, turnstile gate logs, real-t
 ## Testing
 
 ```bash
-# Backend (90 tests)
+# Backend (118 tests)
 cd backend && python -m pytest tests/ -v
 
 # Frontend (27 tests)
@@ -498,7 +559,7 @@ cd frontend && npx playwright test
 ```
 
 Current coverage:
-- **Pytest**: 90 passing, 93%+ coverage
+- **Pytest**: 118 passing (5 test suites: agents, main endpoints, edge cases, jury portal, submission contracts)
 - **Vitest**: 27 passing, all components covered
 - **Playwright**: E2E critical flows
 
